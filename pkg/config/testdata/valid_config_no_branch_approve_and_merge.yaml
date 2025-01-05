@@ -1,0 +1,21 @@
+version: 1.0.1
+
+approve:
+  approver: fr12k
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    labels: [merge]
+    authors: [dune]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."
+merge:
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    labels: [ merge ]
+    authors: [ dune ]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."

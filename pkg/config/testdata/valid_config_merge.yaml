@@ -1,0 +1,44 @@
+## This file is identical to the one in remote_valid_config_merge.yaml
+version: 1.0.2
+_config: merge
+approve:
+  approver: frank
+  exclude:
+  include:
+    labels: [approve]
+    authors: [dune]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."
+    branches:
+      dependabot:
+        authors: [dune]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [dependencies, automerge]
+        # and the pr contains the following comments
+        comments:
+          - title: "## new terraform plan for changed"
+            body: "New and no changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "verify"
+merge:
+  exclude:
+  include:
+    labels: [approve]
+    authors: [dune]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."
+    branches:
+      dependabot:
+        authors: [dune]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [dependencies, automerge]
+        # and the pr contains the following comments
+        comments:
+          - title: "## new terraform plan for changed"
+            body: "New and no changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "verify"

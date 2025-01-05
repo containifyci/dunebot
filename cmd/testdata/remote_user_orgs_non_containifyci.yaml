@@ -1,0 +1,12 @@
+- status: 200
+  body: |
+    [
+      {
+        "login": "notcontainifyci",
+        "id": 1
+      },
+      {
+        "login": "ueber",
+        "id": 2
+      }
+    ]

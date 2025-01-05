@@ -1,0 +1,22 @@
+- url: /repos/test-owner/test-repo/pulls/1
+  status: 200
+  body: |
+    {
+      "id": 1,
+      "number": 1,
+      "head": {
+        "sha": "1234567890"
+      }
+    }
+- status: 200
+  body: |
+    {
+      "id": 1,
+      "number": 1,
+      "head": {
+        "sha": "0987654321"
+      },
+      "base": {
+        "sha": "5432109876"
+      }
+    }

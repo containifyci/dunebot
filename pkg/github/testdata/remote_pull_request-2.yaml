@@ -1,0 +1,13 @@
+- url: /repos/test-owner/test-repo/pulls/2
+  status: 200
+  body: |
+    {
+      "id": 2,
+      "number": 2,
+      "head": {
+        "sha": "1234567890"
+      },
+      "base": {
+        "sha": "1234567890"
+      }
+    }

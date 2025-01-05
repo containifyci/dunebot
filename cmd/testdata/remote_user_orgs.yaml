@@ -1,0 +1,13 @@
+- url: /user/orgs
+  status: 200
+  body: |
+    [
+      {
+        "login": "notcontainifyci",
+        "id": 1
+      },
+      {
+        "login": "containifyci",
+        "id": 2
+      }
+    ]

@@ -1,0 +1,24 @@
+- url: /repos/test-owner/test-repo/pulls/2
+  status: 200
+  body: |
+    {
+      "id": 1,
+      "number": 1,
+      "title": "Test PR 2",
+      "head": {
+        "sha": "1234567890",
+        "ref": "develop"
+      },
+      "base": {
+        "sha": "1234567890"
+      },
+      "labels": [
+        {
+          "name": "approve"
+        }
+      ],
+      "state": "open",
+      "user" : {
+        "login": "fr12k"
+      }
+    }

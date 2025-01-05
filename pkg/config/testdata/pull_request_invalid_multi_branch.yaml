@@ -1,0 +1,12 @@
+labels:
+  - name: minor
+  - name: approve
+comments:
+  - body: "Merge this Pull Request Safe to merge"
+owner:
+  login: dune
+head:
+  ref: dependabot
+checks:
+  - name: "check"
+    state: success

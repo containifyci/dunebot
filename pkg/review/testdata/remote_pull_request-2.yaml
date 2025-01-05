@@ -1,0 +1,56 @@
+- url: /repos/test-owner/test-repo/pulls/2
+  status: 200
+  body: |
+    {
+      "id": 2,
+      "number": 2,
+      "title": "Test PR 2",
+      "head": {
+        "sha": "1234567890",
+        "ref": "develop"
+      },
+      "base": {
+        "sha": "9876543210",
+        "ref": "main",
+        "repo": {
+          "default_branch": "main"
+        }
+      },
+      "labels": [
+        {
+          "name": "approve"
+        }
+      ],
+      "state": "open",
+      "user": {
+        "login": "fr12k"
+      }
+    }
+- url: /repos/test-owner/test-repo/pulls/2
+  status: 200
+  body: |
+    {
+      "id": 2,
+      "number": 2,
+      "title": "Test PR 2",
+      "head": {
+        "sha": "12345678901",
+        "ref": "develop"
+      },
+      "base": {
+        "sha": "9876543210",
+        "ref": "main",
+        "repo": {
+          "default_branch": "main"
+        }
+      },
+      "labels": [
+        {
+          "name": "approve"
+        }
+      ],
+      "state": "open",
+      "user": {
+        "login": "fr12k"
+      }
+    }

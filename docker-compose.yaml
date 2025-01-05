@@ -1,0 +1,49 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # dockerfile: Dockerfile.debug
+    command: ["app"]
+    environment:
+      - ALL_ENV_VARS
+    ports:
+      - "8080:8080"
+      - "40000:40000"
+    networks:
+      - mynet
+
+  token:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      [
+        "token",
+        "service",
+        "--storage",
+        "/app/data.json",
+        "--httpport",
+        "8080",
+        "--grpcport",
+        "50051",
+        "--publicKey",
+        "${DUNEBOT_JWT_PUBLIC_KEY}",
+      ]
+    environment:
+      - ALL_ENV_VARS
+    ports:
+      - "50051:50051"
+      - "8081:8080"
+    networks:
+      - mynet
+    volumes:
+      - storage:/app
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  storage:

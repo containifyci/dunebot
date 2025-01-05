@@ -1,0 +1,12 @@
+labels:
+  - name: patch
+  - name: approve
+comments:
+  - body: "Merge this Pull Request Safe to merge"
+owner:
+  login: dune
+head:
+  ref: dependabot
+checks:
+  - name: "ci/circleci: ete-tests"
+    state: success

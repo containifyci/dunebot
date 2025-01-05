@@ -1,0 +1,78 @@
+version: 1.0.1
+## remote_valid_config.yaml is almost identical config to this file except the commented line below
+#_config: merge
+approve:
+  approver: fr12k
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    labels: [approve]
+    authors: [dune]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."
+    branches:
+      develop:
+        authors: [dune]
+        prefix: "develop"
+        # and label is approve
+        labels: [approve]
+        # and the pr contains the following comments
+        comments:
+          - title: "Merge this Pull Request"
+            body: "Safe to merge"
+        required_statuses:
+          - "ci/circleci: ete-tests"
+      dependabot:
+        authors: [dune]
+        age: "2 hours 30 minutes"
+        prefix: "dependabot"
+        # and label is approve
+        labels: [dependencies]
+        # and the pr contains the following comments
+        comments:
+          - title: "## terraform plan for changed"
+            body: "No changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "check"
+  exclude:
+    label: do not merge
+    comments:
+      - title: "## terraform plan for changed"
+        body: "Changes detected"
+merge:
+  include:
+    labels: [approve]
+    authors: [dune]
+    comments:
+      - title: "## terraform plan for changed"
+        body: "No changes. Your infrastructure matches the configuration."
+    branches:
+      develop:
+        authors: [dune]
+        prefix: "develop"
+        # and label is approve
+        labels: [approve]
+        # and the pr contains the following comments
+        comments:
+          - title: "Merge this Pull Request"
+            body: "Safe to merge"
+        required_statuses:
+          - "ci/circleci: ete-tests"
+      dependabot:
+        authors: [dune]
+        age: "2 hours 30 minutes"
+        prefix: "dependabot"
+        # and label is approve
+        labels: [dependencies]
+        # and the pr contains the following comments
+        comments:
+          - title: "## terraform plan for changed"
+            body: "No changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "check"
+  exclude:
+    label: do not merge
+    comments:
+      - title: "## terraform plan for changed"
+        body: "Changes detected"

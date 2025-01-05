@@ -1,0 +1,13 @@
+labels:
+  - name: dependencies
+  - name: approve
+comments:
+  - body: "## terraform plan for changed No changes. Your infrastructure matches the configuration."
+owner:
+  login: dune
+head:
+  ref: dependabot
+createdAt: "now"
+checks:
+  - name: "check"
+    state: success

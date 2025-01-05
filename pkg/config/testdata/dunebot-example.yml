@@ -1,0 +1,8 @@
+version: 1.0.0
+
+approve:
+  approver: "containifyci-bot"
+  include:
+    branches:
+      approve_and_merge:
+        prefix: test/auto-approve-mertcan

@@ -1,0 +1,23 @@
+server:
+  address: "localhost"
+  base_path: "/dunebot"
+  port: 8080
+github:
+  web_url: "https://github.com"
+  v3_api_url: "https://api.github.com"
+  v4_api_url: "https://api.github.com/graphql"
+  app:
+    integration_id: 123
+    webhook_secret: "your-webhook-secret"
+    private_key: "your-private-key"
+  oauth:
+    client_id: "your-client-id"
+    client_secret: "your-client-secret"
+jwt:
+  private_key: "your-jwt-private-key"
+  public_key: "your-jwt-public-key"
+  address: "your-jwt-address"
+app_configuration:
+  user_agent: "your-user-agent"
+  client_timeout: "5s"
+  installation_id: 123

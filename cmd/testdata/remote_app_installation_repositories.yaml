@@ -1,0 +1,26 @@
+- url: /installation/repositories
+  status: 200
+  body: |
+    {
+      "total_count": 2,
+      "repositories": [
+        {
+          "id": 1,
+          "name": "test-repo-1",
+          "full_name": "palantir/test-repo-1",
+          "owner": {
+            "login": "octocat",
+            "id": 1
+          }
+        },
+        {
+          "id": 2,
+          "name": "test-repo-2",
+          "full_name": "test-owner/test-repo-2",
+          "owner": {
+            "login": "octocat",
+            "id": 1
+          }
+        }
+      ]
+    }

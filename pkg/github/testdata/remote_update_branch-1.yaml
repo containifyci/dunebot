@@ -1,0 +1,7 @@
+- url: /repos/test-owner/test-repo/pulls/1/update-branch
+  status: 200
+  body: |
+    {
+      "message": "Updating pull request branch.",
+      "url": "https://github.com/repos/test-owner/test-repo/pulls/1"
+    }

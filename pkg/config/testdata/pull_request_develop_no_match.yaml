@@ -1,0 +1,12 @@
+labels:
+  - name: automerge
+comments:
+  - body: "Merge this PR to preview the changes."
+owner:
+  login: fr12k-no
+head:
+  ref: dependabot
+checks:
+  - name: "PR Preview"
+    state: success
+

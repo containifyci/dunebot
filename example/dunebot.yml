@@ -1,0 +1,44 @@
+versiuon: 1.0.0
+
+# update:
+#   ## similar to merge, but update the pull request
+
+approve:
+  approver: "fr12k"
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    - labels:
+      - approve
+      authors:
+      - "dune"
+      comments:
+        - title: "## `terraform plan` for changed"
+          body: "No changes. Your infrastructure matches the configuration."
+      branches:
+      - develop:
+          prefix: "develop"
+          required_statuses:
+            - "ci/circleci: ete-tests"
+  exclude:
+    label: do not merge
+    comments:
+      - title: "## `terraform plan` for changed"
+        body: "Changes detected"
+
+  branches:
+    - develop:
+        prefix: "develop"
+        # and label is approve
+        label: approve
+        # and the pr contains the following comments
+        required_comments:
+          - title: "## `terraform plan` for changed"
+            body: "No changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "ci/circleci: ete-tests"
+
+merge:
+  # "method" defines the merge method. The available options are "merge",
+  # "rebase", "squash", and "ff-only".
+  method: squash

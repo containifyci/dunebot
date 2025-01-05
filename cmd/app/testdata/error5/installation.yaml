@@ -1,0 +1,6 @@
+- url: /app/installations/1
+  status: 500
+  body: |
+    {
+      "message": "Internal server error"
+    }

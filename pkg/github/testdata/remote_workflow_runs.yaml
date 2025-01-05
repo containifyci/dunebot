@@ -1,0 +1,30 @@
+- url: /repos/test-owner/test-repo/actions/runs
+  query: branch=main&event=push&exclude_pull_requests=true&head_sha=sha
+  status: 200
+  body: |
+    {
+      "total_count": 2,
+      "workflow_runs": [
+        {
+          "id": 8022930191,
+          "name": "Deploy Infrastructure",
+          "head_branch": "main",
+          "head_sha": "48250f8b864f348a05094b1e61550c3920197f35",
+          "path": ".github/workflows/deploy.yml",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 8022930200,
+          "name": "Linting",
+          "node_id": "WFR_kwLOFQ9-4c8AAAAB3jQzGA",
+          "head_branch": "main",
+          "head_sha": "48250f8b864f348a05094b1e61550c3920197f35",
+          "path": ".github/workflows/lint.yml",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }

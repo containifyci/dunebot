@@ -1,0 +1,11 @@
+- url: /repos/test-owner/test-repo/issues/1/comments
+  status: 422
+  body: |
+    {
+      "id": 1,
+      "url": "https://api.github.com/repos/test-owner/test-repo/issues/comments/1",
+      "body": "test comment",
+      "user": {
+        "login": "octocat"
+      }
+    }

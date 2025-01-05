@@ -1,0 +1,8 @@
+- url: /repos/test-owner/test-repo/pulls/1/merge
+  status: 200
+  body: |
+    {
+      "sha": "abcdefg",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }

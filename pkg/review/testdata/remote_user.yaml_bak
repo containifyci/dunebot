@@ -1,0 +1,7 @@
+- url: /user
+  status: 200
+  body: |
+    {
+      "login": "test_user",
+      "id": 1
+    }

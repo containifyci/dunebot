@@ -1,0 +1,73 @@
+version: 1.0.1
+
+approve:
+  approver: fr12k
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    labels: [approve]
+    authors: [dune]
+    branches:
+      minor:
+        authors: [fr12k]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [minor]
+        # and the pr contains the following comments
+        comments:
+          - title: "## terraform plan for changed"
+            body: "No changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "check"
+      patch:
+        authors: [dune]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [patch]
+        # and the pr contains the following comments
+        comments:
+          - title: "Merge this Pull Request"
+            body: "Safe to merge"
+        required_statuses:
+          - "ci/circleci: ete-tests"
+  exclude:
+    label: do not merge
+    comments:
+      - title: "## terraform plan for changed"
+        body: "Changes detected"
+
+merge:
+  methos: squash
+  required_statuses:
+    - "ci/circleci: ete-tests"
+  include:
+    labels: [approve]
+    authors: [dune]
+    branches:
+      minor:
+        authors: [fr12k]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [minor]
+        # and the pr contains the following comments
+        comments:
+          - title: "## terraform plan for changed"
+            body: "No changes. Your infrastructure matches the configuration."
+        required_statuses:
+          - "check"
+      patch:
+        authors: [dune]
+        prefix: "dependabot"
+        # and label is approve
+        labels: [patch]
+        # and the pr contains the following comments
+        comments:
+          - title: "Merge this Pull Request"
+            body: "Safe to merge"
+        required_statuses:
+          - "ci/circleci: ete-tests"
+  exclude:
+    label: do not merge
+    comments:
+      - title: "## terraform plan for changed"
+        body: "Changes detected"

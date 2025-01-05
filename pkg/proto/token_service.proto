@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "../proto";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+message ServerConfig {
+
+}
+
+service Token {
+  rpc RetrieveInstallation (Installation) returns (Installation);
+  rpc StoreInstallation (Installation) returns (Installation);
+  rpc RetrieveToken (SingleToken) returns (SingleToken);
+  rpc UpdateToken (SingleToken) returns (SingleToken);
+  rpc StoreToken (SingleToken) returns (SingleToken);
+  rpc RevokeToken (SingleToken) returns (RevokeMessage);
+}
+
+message RevokeMessage {
+  bool revoked = 1;
+  message Error {
+    string message = 1;
+  }
+  optional Error error = 2;
+}
+
+message SingleToken {
+  int64 installation_id = 1;
+  CustomToken token = 2;
+}
+
+message Installation {
+  int64 installation_id = 1;
+  repeated CustomToken tokens = 2;
+}
+
+message CustomToken {
+  string access_token = 1;
+  string refresh_token = 2;
+  google.protobuf.Timestamp expiry = 3;
+  string token_type = 4;
+  string user = 5;
+}

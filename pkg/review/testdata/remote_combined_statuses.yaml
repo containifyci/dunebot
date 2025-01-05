@@ -1,0 +1,17 @@
+- url: /repos/test-owner/test-repo/commits/1234567890/status
+  status: 200
+  body: |
+    {
+      "state": "success",
+      "statuses": [
+        {
+          "id": 1,
+          "state": "success",
+          "description": "Build has completed successfully",
+          "target_url": "https://ci.example.com/1000/output",
+          "context": "continuous-integration/travis-ci"
+        }
+      ],
+      "sha": "1234567890",
+      "total_count": 1
+    }

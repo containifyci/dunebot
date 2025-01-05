@@ -1,0 +1,49 @@
+- url: /repos/test-owner/test-repo/pulls
+  status: 200
+  headers:
+    link: <https://api.github.com/repositories/724073722/pulls?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/724073722/pulls?per_page=1&page=3>; rel="last"
+  body: |
+    [{
+      "id": 1,
+      "number": 1,
+      "title": "Test PR 1",
+      "head": {
+        "sha": "1234567890",
+        "ref": "develop"
+      },
+      "base": {
+        "sha": "1234567890"
+      },
+      "labels": [
+        {
+          "name": "approve"
+        }
+      ],
+      "state": "open",
+      "user" : {
+        "login": "fr12k"
+      }
+    }]
+- status: 200
+  body: |
+    [{
+      "id": 1,
+      "number": 2,
+      "title": "Test PR 2",
+      "head": {
+        "sha": "1234567890",
+        "ref": "develop"
+      },
+      "base": {
+        "sha": "1234567890"
+      },
+      "labels": [
+        {
+          "name": "approve"
+        }
+      ],
+      "state": "open",
+      "user" : {
+        "login": "fr12k"
+      }
+    }]

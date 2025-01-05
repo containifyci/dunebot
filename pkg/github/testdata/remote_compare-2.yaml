@@ -1,0 +1,6 @@
+- url: /repos/test-owner/test-repo/compare/main...sha2
+  status: 200
+  body: |
+    {
+      "status": "behind"
+    }

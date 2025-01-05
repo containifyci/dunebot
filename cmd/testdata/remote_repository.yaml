@@ -1,0 +1,18 @@
+- url: /repos/test-owner/test-repo
+  status: 200
+  body: |
+    {
+      "id": 704096938,
+      "node_id": "R_kgDOKfeqqg",
+      "name": "frank-github-action-workflow-test",
+      "private": true,
+      "owner": {
+        "login": "containifyci"
+      },
+      "description": null,
+      "fork": false,
+      "allow_squash_merge": true,
+      "allow_merge_commit": false,
+      "allow_rebase_merge": false,
+      "allow_auto_merge": false
+    }

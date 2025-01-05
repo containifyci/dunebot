@@ -1,0 +1,11 @@
+- url: /user/orgs
+  status: 200
+  body: |
+    [
+      {
+        "login": "containifyci",
+        "id": 1,
+        "url": "https://api.github.com/orgs/containifyci",
+        "description": "A great organization"
+      }
+    ]

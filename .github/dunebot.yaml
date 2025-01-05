@@ -1,0 +1,16 @@
+version: 1.0.0
+
+_config: merge
+
+approve:
+  include:
+    branches:
+      dependabot_terraform:
+        prefix: "dependabot/go_modules"
+
+merge:
+  include:
+    branches:
+      dependabot_terraform:
+        prefix: "dependabot/go_modules"
+  method: squash

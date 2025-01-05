@@ -1,0 +1,6 @@
+- url: /user/orgs
+  status: 500
+  body: |
+    {
+      "message": "Internal server error"
+    }
