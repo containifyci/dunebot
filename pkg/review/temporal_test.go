@@ -14,7 +14,7 @@ import (
 )
 
 // Mock gRPC interceptor to simulate Temporal behavior
-func mockTemporalInterceptor(methods ...string) func (
+func mockTemporalInterceptor(methods ...string) func(
 	ctx context.Context,
 	method string,
 	req, reply interface{},
@@ -22,7 +22,7 @@ func mockTemporalInterceptor(methods ...string) func (
 	invoker grpc.UnaryInvoker,
 	opts ...grpc.CallOption,
 ) error {
-	return func (
+	return func(
 		ctx context.Context,
 		method string,
 		req, reply interface{},
@@ -50,7 +50,7 @@ func TestPullRequestReviewSuccess(t *testing.T) {
 
 	prReview := PullRequestReview{
 		PullRequest: &github.PullRequest{Number: github.Int(1)},
-		Repository:  &github.Repository{Name: github.String("repo")},
+		Repository:  &github.Repository{Name: github.String("repo"), Owner: &github.User{Login: github.String("owner")}},
 		Event:       &github.PullRequestEvent{Action: github.String("opened")},
 		Config:      &config.AppConfig{},
 	}
@@ -70,7 +70,7 @@ func TestPullRequestReviewUnKnownWorkflow(t *testing.T) {
 
 	prReview := PullRequestReview{
 		PullRequest: &github.PullRequest{Number: github.Int(1)},
-		Repository:  &github.Repository{Name: github.String("repo")},
+		Repository:  &github.Repository{Name: github.String("repo"), Owner: &github.User{Login: github.String("owner")}},
 		Event:       &github.PullRequestEvent{Action: github.String("opened")},
 		Config:      &config.AppConfig{},
 	}
@@ -91,7 +91,7 @@ func TestPullRequestReviewClientError(t *testing.T) {
 
 	prReview := PullRequestReview{
 		PullRequest: &github.PullRequest{Number: github.Int(1)},
-		Repository:  &github.Repository{Name: github.String("repo")},
+		Repository:  &github.Repository{Name: github.String("repo"), Owner: &github.User{Login: github.String("owner")}},
 		Event:       &github.PullRequestEvent{Action: github.String("opened")},
 		Config:      &config.AppConfig{},
 	}
