@@ -68,12 +68,12 @@ func TestRevokeToken(t *testing.T) {
 	tests := []struct {
 		name           string
 		user           string
-		installationId int64
+		installationId string
 		err            error
 	}{
-		{name: "revoke token", user: "user", installationId: 1},
-		{name: "revoke token no token found", user: "user1", installationId: 1, err: fmt.Errorf("user user1 has no token")},
-		{name: "revoke token no installation found", user: "user", installationId: 2, err: fmt.Errorf("requested token for installation 2 not found")},
+		{name: "revoke token", user: "user", installationId: "1"},
+		{name: "revoke token no token found", user: "user1", installationId: "1", err: fmt.Errorf("user user1 has no token")},
+		{name: "revoke token no installation found", user: "user", installationId: "2", err: fmt.Errorf("requested token for installation 2 not found")},
 	}
 
 	for _, tt := range tests {

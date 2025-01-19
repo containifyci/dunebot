@@ -8,6 +8,8 @@ github.com/bradleyfalzon/ghinstallation/v2 v2.11.0/go.mod h1:0LWKQwOHewXO/1acI6T
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
+github.com/containifyci/oauth2-storage v0.2.0 h1:i0VmvRlHV04OcuSoIAhA1hCqeo4RD/TdK2jNV5vAhHQ=
+github.com/containifyci/oauth2-storage v0.2.0/go.mod h1:niLV058pRW7PDHmwjDffxYVBLyL7K5qVqpK1XpOamzA=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/cpuguy83/go-md2man/v2 v2.0.4/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

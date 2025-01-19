@@ -2,6 +2,7 @@ package review
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -129,7 +130,7 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 		cfg := r.config
 
 		oauth2cfg := oauth2.Config{
-			InstallationId:  installationId,
+			InstallationId:  fmt.Sprintf("%d", installationId),
 			User:            appCfg.Approve.Approver,
 			Ctx:             ctx,
 			OAuth2Config:    cfg.Config().ToOAuth2Config(),

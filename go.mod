@@ -1,9 +1,10 @@
 module github.com/containifyci/dunebot
 
-go 1.23.0
+go 1.23.3
 
 require (
 	github.com/alexedwards/scs v1.4.1
+	github.com/containifyci/oauth2-storage v0.2.0
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/go-github/v66 v66.0.0
@@ -16,6 +17,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
+	go.temporal.io/api v1.43.0
 	go.temporal.io/sdk v1.31.0
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 	golang.org/x/oauth2 v0.24.0
@@ -70,7 +72,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	go.temporal.io/api v1.43.0 // indirect
 	golang.org/x/crypto v0.28.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect

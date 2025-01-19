@@ -6,7 +6,6 @@ import (
 	"github.com/containifyci/dunebot/cmd"
 	_ "github.com/containifyci/dunebot/cmd/app"
 	_ "github.com/containifyci/dunebot/cmd/dispatch"
-	_ "github.com/containifyci/dunebot/cmd/token"
 )
 
 func main() {

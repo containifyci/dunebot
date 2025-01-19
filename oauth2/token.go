@@ -4,8 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/containifyci/dunebot/pkg/proto"
-	"github.com/containifyci/dunebot/pkg/storage"
+	"github.com/containifyci/oauth2-storage/pkg/proto"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -19,7 +18,7 @@ type Endpoint = oauth2.Endpoint
 
 type Config struct {
 	Ctx            context.Context
-	InstallationId int64
+	InstallationId string
 	User           string
 	Addr           string
 	*OAuth2Config
@@ -100,7 +99,7 @@ func (c *Config) StoreToken(token *oauth2.Token) error {
 		log.Error().Err(err).Msgf("Failed to connect to gRPC server: %v\n", err)
 		return err
 	}
-	tk := &storage.CustomToken{
+	tk := &proto.CustomToken{
 		AccessToken:  token.AccessToken,
 		RefreshToken: token.RefreshToken,
 		TokenType:    token.TokenType,
@@ -111,7 +110,7 @@ func (c *Config) StoreToken(token *oauth2.Token) error {
 	log.Debug().Msgf("Store Token for user: %s+\n", tk.User)
 	log.Debug().Msgf("Token Expiry: %s\n", tk.Expiry.AsTime())
 
-	_, err = grpcClient.StoreToken(c.Ctx, &storage.SingleToken{
+	_, err = grpcClient.StoreToken(c.Ctx, &proto.SingleToken{
 		InstallationId: c.InstallationId,
 		Token:          tk,
 	})
@@ -131,9 +130,9 @@ func (c *Config) RetrieveToken() (*oauth2.Token, error) {
 		return nil, err
 	}
 
-	tk, err := grpcClient.RetrieveToken(c.Ctx, &storage.SingleToken{
+	tk, err := grpcClient.RetrieveToken(c.Ctx, &proto.SingleToken{
 		InstallationId: c.InstallationId,
-		Token: &storage.CustomToken{
+		Token: &proto.CustomToken{
 			User: c.User,
 		},
 	})
@@ -158,9 +157,9 @@ func (c *Config) RevokeToken() error {
 		return err
 	}
 
-	message, err := grpcClient.RevokeToken(c.Ctx, &storage.SingleToken{
+	message, err := grpcClient.RevokeToken(c.Ctx, &proto.SingleToken{
 		InstallationId: c.InstallationId,
-		Token: &storage.CustomToken{
+		Token: &proto.CustomToken{
 			User: c.User,
 		},
 	})
