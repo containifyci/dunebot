@@ -21,7 +21,7 @@ type (
 	TemporalReviewer struct {
 		logger logger.Logger
 		config config.ApplicationConfig
-		opts []grpc.DialOption
+		opts   []grpc.DialOption
 	}
 )
 
@@ -29,7 +29,7 @@ func NewTemporalReviewer(logger logger.Logger, config config.ApplicationConfig, 
 	return &TemporalReviewer{
 		logger: logger,
 		config: config,
-		opts: opts,
+		opts:   opts,
 	}
 }
 
@@ -47,7 +47,7 @@ func (r *TemporalReviewer) PullRequestReview(ctx context.Context, pullRequestRev
 	defer c.Close()
 
 	workflowOptions := client.StartWorkflowOptions{
-		ID:                    fmt.Sprintf("pull_request_review_%s_%s", pullRequestReview.Repository.Owner, *pullRequestReview.Repository.Name),
+		ID:                    fmt.Sprintf("pull_request_review_%s_%s", *pullRequestReview.Repository.Owner.Login, *pullRequestReview.Repository.Name),
 		TaskQueue:             TaskQueue,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE,
 	}
