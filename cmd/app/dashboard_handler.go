@@ -2,15 +2,18 @@ package cmd
 
 import (
 	// "html/template"
+	"fmt"
 	"net/http"
 
 	appoauth "github.com/containifyci/dunebot/oauth2"
+	"github.com/containifyci/oauth2-storage/pkg/proto"
 
 	"github.com/alexedwards/scs"
 	"github.com/containifyci/dunebot/pkg/auth"
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
-	"github.com/containifyci/dunebot/pkg/storage"
+
+	// "github.com/containifyci/dunebot/pkg/storage"
 	"github.com/containifyci/dunebot/pkg/template"
 	"github.com/rs/zerolog/log"
 )
@@ -56,7 +59,7 @@ func DashboardHandler(cfg *config.Config, appClient *github.Client, ghc github.G
 			return
 		}
 
-		installationId := int64(installion.GetID())
+		installationId := fmt.Sprintf("%d", installion.GetID())
 
 		// installationId, err := sess.GetInt64(SessionKeyInstallation)
 		// if err != nil {
@@ -74,7 +77,7 @@ func DashboardHandler(cfg *config.Config, appClient *github.Client, ghc github.G
 			http.Error(w, "Failed to connect to gRPC server", http.StatusInternalServerError)
 			return
 		}
-		install, err := tokenClient.RetrieveInstallation(r.Context(), &storage.Installation{InstallationId: installationId})
+		install, err := tokenClient.RetrieveInstallation(r.Context(), &proto.Installation{InstallationId: installationId})
 		if err != nil {
 			log.Error().Err(err).Msgf("Failed to retrieve installation: %v\n", err)
 			http.Error(w, "Failed to retrieve installation", http.StatusInternalServerError)

@@ -15,7 +15,7 @@ import (
 	"github.com/containifyci/dunebot/oauth2"
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
-	"github.com/containifyci/dunebot/pkg/storage"
+	"github.com/containifyci/oauth2-storage/pkg/storage"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,11 +51,11 @@ func TestRegisterSetup(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, 1, len(data))
-	assert.Equal(t, int64(1), data[1].InstallationId)
-	assert.Equal(t, 1, len(data[1].Tokens))
-	assert.Equal(t, "mocktoken", data[1].Tokens[0].AccessToken)
-	assert.Equal(t, "mockrefresh", data[1].Tokens[0].RefreshToken)
-	assert.Equal(t, "user", data[1].Tokens[0].User)
+	assert.Equal(t, "1", data["1"].InstallationId)
+	assert.Equal(t, 1, len(data["1"].Tokens))
+	assert.Equal(t, "mocktoken", data["1"].Tokens[0].AccessToken)
+	assert.Equal(t, "mockrefresh", data["1"].Tokens[0].RefreshToken)
+	assert.Equal(t, "user", data["1"].Tokens[0].User)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, "<!DOCTYPE html>\n<html>\n<head>\n    <title>In order for DuneBot to approve PRs, you need to connect it to an Github account with CodeOwnership permissions.</title>\n</head>\n<body>\n    <h1>In order for DuneBot to approve PRs, you need to connect it to an Github account with CodeOwnership permissions.</h1>\n    <a href=\"mockverificationuri\" target=\"_blank\">Please open</a>\n    <p>mockusercode</p>\n</body>\n</html>", strings.Trim(rr.Body.String(), "\n"))

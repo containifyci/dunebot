@@ -236,7 +236,7 @@ func oauth2DeviceFlow(cfg config.ConfigTransformer, errorHandler errorReporter) 
 		accesToken := authSrv.CreateTokenFnc(auth.ServiceClaims{ServiceName: "dunebot"})
 
 		oauth2cfg := appoauth.Config{
-			InstallationId:  installation.GetID(),
+			InstallationId:  fmt.Sprintf("%d", installation.GetID()),
 			User:            user.GetLogin(),
 			Ctx:             ctx,
 			OAuth2Config:    config,

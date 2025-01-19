@@ -17,11 +17,12 @@ import (
 
 	"github.com/containifyci/dunebot/pkg/auth"
 	"github.com/containifyci/dunebot/pkg/config"
-	"github.com/containifyci/dunebot/pkg/storage"
+	oauth2cfg "github.com/containifyci/oauth2-storage/pkg/config"
+	"github.com/containifyci/oauth2-storage/pkg/proto"
+	"github.com/containifyci/oauth2-storage/pkg/service"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
-
 
 func SetupGRPCClient(t *testing.T, user string, tokens ...string) Config {
 	if len(tokens) == 0 {
@@ -32,7 +33,7 @@ func SetupGRPCClient(t *testing.T, user string, tokens ...string) Config {
 
 	go func() {
 		cfg.PublicKey = publicKey
-		err := storage.StartServers(cfg)
+		err := service.StartServers(cfg)
 		assert.NoError(t, err)
 	}()
 	// wait for the server to start
@@ -57,7 +58,7 @@ func SetupGRPCClient(t *testing.T, user string, tokens ...string) Config {
 		AuthInterceptor: *NewAuthInterceptor(tokenFnc),
 		Addr:            fmt.Sprintf(":%d", cfg.GRPCPort),
 		Ctx:             context.Background(),
-		InstallationId:  1,
+		InstallationId:  "1",
 		User:            user,
 		OAuth2Config:    GetConfig(&cfg2),
 	}
@@ -65,10 +66,10 @@ func SetupGRPCClient(t *testing.T, user string, tokens ...string) Config {
 	return config
 }
 
-func SetupTokenService(t *testing.T, tokens string) storage.Config {
-	s := storage.Installation{
-		InstallationId: 1,
-		Tokens: []*storage.CustomToken{
+func SetupTokenService(t *testing.T, tokens string) oauth2cfg.Config {
+	s := proto.Installation{
+		InstallationId: "1",
+		Tokens: []*proto.CustomToken{
 			{
 				AccessToken:  "access",
 				RefreshToken: "refresh",
@@ -79,7 +80,7 @@ func SetupTokenService(t *testing.T, tokens string) storage.Config {
 		},
 	}
 
-	m := make(map[int64]*storage.Installation)
+	m := make(map[int64]*proto.Installation)
 	m[1] = &s
 	b, err := json.Marshal(m)
 	assert.NoError(t, err)
@@ -89,7 +90,7 @@ func SetupTokenService(t *testing.T, tokens string) storage.Config {
 	err = os.WriteFile(file, b, 0644)
 	assert.NoError(t, err)
 
-	cfg := storage.Config{
+	cfg := oauth2cfg.Config{
 		TokenSyncPeriod: "1m",
 		StorageFile:     file,
 		GRPCPort:        GetFreePort(),

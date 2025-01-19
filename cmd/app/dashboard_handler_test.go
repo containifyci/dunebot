@@ -25,7 +25,8 @@ import (
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
 	"github.com/containifyci/dunebot/pkg/github/testdata"
-	"github.com/containifyci/dunebot/pkg/storage"
+	oauth2cfg "github.com/containifyci/oauth2-storage/pkg/config"
+	"github.com/containifyci/oauth2-storage/pkg/service"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )
@@ -44,8 +45,8 @@ type (
 
 	TokenServiceTest struct {
 		server  *grpc.Server
-		service *storage.TokenService
-		config  storage.Config
+		service *service.TokenService
+		config  oauth2cfg.Config
 	}
 )
 
@@ -70,7 +71,7 @@ func NewWebHandlerTest(t *testing.T, folder string, tokens string, opts ...Optio
 		tokens = "{}"
 	}
 	tkCfg, tkSrv := setupTokenService(t, tokens)
-	grpc := storage.StartGRPCServer(tkSrv)
+	grpc := service.StartGRPCServer(tkSrv)
 
 	cfg := newConfigForTest(tkCfg)
 
@@ -218,7 +219,7 @@ func TestDashboardHandlerErrors(t *testing.T) {
 
 // utility functions
 
-func newConfigForTest(tkCfg storage.Config) *config.Config {
+func newConfigForTest(tkCfg oauth2cfg.Config) *config.Config {
 	privKey, _ := generateECDSAKey()
 	// Mock data
 	cfg := &config.Config{
@@ -286,24 +287,24 @@ func generateECDSAKey() (privateKey string, publicKey string) {
 	return privateKey, publicKey
 }
 
-func setupTokenService(t *testing.T, tokens string) (storage.Config, *storage.TokenService) {
+func setupTokenService(t *testing.T, tokens string) (oauth2cfg.Config, *service.TokenService) {
 	file := t.TempDir() + "/tokens.json"
 	fmt.Printf("token tmp %s", file)
 	err := os.WriteFile(file, []byte(tokens), 0644)
 	assert.NoError(t, err)
 
-	cfg := storage.Config{
+	cfg := oauth2cfg.Config{
 		TokenSyncPeriod: "1m",
 		StorageFile:     file,
 		GRPCPort:        getFreePort(),
 	}
 
-	ts := storage.NewTokenService(cfg)
+	ts := service.NewTokenService(cfg)
 	assert.NotNil(t, ts)
 	return cfg, ts
 }
 
-const tokens = `{"1":{"installation_id":1,"tokens":[{"access_token":"access","refresh_token":"refresh","expiry":{"seconds":1715603314,"nanos":409109000},"token_type":"type","user":"user"}]}}`
+const tokens = `{"1":{"installation_id":"1","tokens":[{"access_token":"access","refresh_token":"refresh","expiry":{"seconds":1715603314,"nanos":409109000},"token_type":"type","user":"user"}]}}`
 
 type mockStore struct {
 	m map[string][]byte

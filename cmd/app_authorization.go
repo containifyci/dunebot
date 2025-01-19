@@ -3,9 +3,10 @@ package cmd
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
-	"github.com/palantir/go-githubapp/githubapp"
 	appoauth "github.com/containifyci/dunebot/oauth2"
+	"github.com/palantir/go-githubapp/githubapp"
 
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
@@ -36,11 +37,11 @@ func (h *AppHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	installationID := event.GetInstallation().GetID()
 
 	oauth2cfg := appoauth.Config{
-			InstallationId: installationID,
-			//TODO make the account name configurable
-			User:           "fr12k",
-			Ctx:            ctx,
-			OAuth2Config:         appoauth.GetConfig(h.Config),
+		InstallationId: fmt.Sprintf("%d", installationID),
+		//TODO make the account name configurable
+		User:         "fr12k",
+		Ctx:          ctx,
+		OAuth2Config: appoauth.GetConfig(h.Config),
 	}
 
 	oauth2cfg.TokenSourceFrom(ctx)
@@ -59,7 +60,6 @@ func (h *AppHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	for _, install := range installs {
 		logger.Debug().Msgf("Retrieved following installations %v+", install)
 	}
-
 
 	// oauth2cfg := appoauth.Config{
 	// 	InstallationId: installationID,
