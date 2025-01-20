@@ -8,7 +8,7 @@ import (
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/logger"
 	"github.com/containifyci/dunebot/pkg/queue"
-	"github.com/google/go-github/v66/github"
+	"github.com/google/go-github/v68/github"
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/stretchr/testify/assert"
 )
@@ -172,4 +172,3 @@ type testErrorReviewer struct {
 func (r *testErrorReviewer) PullRequestReview(ctx context.Context, pullRequestReview PullRequestReview) error {
 	return r.err
 }
-
