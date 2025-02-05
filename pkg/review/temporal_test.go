@@ -46,7 +46,7 @@ func TestPullRequestReviewSuccess(t *testing.T) {
 		ReviewerConfig: config.ReviewerConfig{Address: "localhost:7233"},
 	}
 
-	reviewer := NewTemporalReviewer(mockLogger, mockConfig, grpc.WithUnaryInterceptor(mockTemporalInterceptor("GetSystemInfo", "StartWorkflowExecution")))
+	reviewer := NewTemporalReviewer(mockLogger, mockConfig, grpc.WithUnaryInterceptor(mockTemporalInterceptor("GetSystemInfo", "SignalWithStartWorkflowExecution")))
 
 	prReview := PullRequestReview{
 		PullRequest: &github.PullRequest{Number: github.Int(1)},
