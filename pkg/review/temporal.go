@@ -13,7 +13,7 @@ import (
 
 const (
 	//TODO make this configurable
-	WorkflowName = "PullRequestReviewWorkflow"
+	WorkflowName = "PullRequestQueueWorkflow"
 	TaskQueue    = "hello-world"
 )
 
@@ -47,17 +47,19 @@ func (r *TemporalReviewer) PullRequestReview(ctx context.Context, pullRequestRev
 	defer c.Close()
 
 	workflowOptions := client.StartWorkflowOptions{
-		ID:                    fmt.Sprintf("pull_request_review_%s_%s", *pullRequestReview.Repository.Owner.Login, *pullRequestReview.Repository.Name),
-		TaskQueue:             TaskQueue,
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE,
+		ID:                       fmt.Sprintf("pull_request_review_%s_%s", *pullRequestReview.Repository.Owner.Login, *pullRequestReview.Repository.Name),
+		TaskQueue:                TaskQueue,
+		WorkflowIDReusePolicy:    enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE,
+		WorkflowIDConflictPolicy: enums.WORKFLOW_ID_CONFLICT_POLICY_USE_EXISTING,
 	}
 
-	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, WorkflowName, pullRequestReview)
+	_, err = c.SignalWithStartWorkflow(context.Background(), workflowOptions.ID, "pull_request_review", pullRequestReview, workflowOptions, WorkflowName)
+	// we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, WorkflowName, pullRequestReview)
 	if err != nil {
 		r.logger.Error("Unable to execute workflow", "error", err)
 		return err
 	}
 
-	r.logger.Debug("Started workflow", "WorkflowID", we.GetID(), "RunID", we.GetRunID())
+	r.logger.Debug("Started workflow")
 	return nil
 }
