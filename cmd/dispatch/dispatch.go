@@ -67,15 +67,14 @@ func execute(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("GITHUB_TOKEN is required")
 	}
 
-	if cfg.RepositoryEndpoint == "" {
-		log.Error().Msg("REPOSITORY_ENDPOINT is required")
-		return fmt.Errorf("REPOSITORY_ENDPOINT is required")
-	}
-
 	gh := github.NewClient(github.WithConfig(github.NewStaticTokenConfig(cfg.GithubToken)))
 	return run(cfg, gh)
 }
 
+// TODO: instead of using this function to list all the repositories that use Dunebot.
+// Just implement two simple searches
+//   - for org filter the repositories that have the dunebot customer property
+//     curl -L   -H "Accept: application/vnd.github+json"   -H "Authorization: Bearer ${GH_TOKEN}"   -H "X-GitHub-Api-Version: 2022-11-28"   "https://api.github.com/search/repositories?q=props.dunebot:true+org:containifyci"
 func listDuneBotRepositories(ctx context.Context, cfg *dispatchConfig) ([]string, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", cfg.RepositoryEndpoint, nil)
 	if err != nil {
@@ -123,10 +122,20 @@ func run(cfg *dispatchConfig, gh github.GithubClient) error {
 	// Create a new request
 
 	ctx := context.Background()
-
 	var repos []string
 	if dispatchArgs.repo != "" {
 		repos = []string{dispatchArgs.repo}
+	} else if cfg.RepositoryEndpoint == "" {
+		repositories, _, err := gh.Client.Repositories.ListByAuthenticatedUser(ctx, &github.RepositoryListByAuthenticatedUserOptions{
+			Visibility: "all",
+		})
+		if err != nil {
+			log.Error().Err(err).Msgf("fetching repositories: %v", err)
+			return err
+		}
+		for _, repo := range repositories {
+			repos = append(repos, *repo.FullName)
+		}
 	} else {
 		repositories, err := listDuneBotRepositories(ctx, cfg)
 		if err != nil {
