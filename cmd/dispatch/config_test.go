@@ -8,22 +8,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLoadConfig(t *testing.T) {
+func TestLoadRequiredConfig(t *testing.T) {
 	t.Setenv("DUNEBOT_GITHUB_TOKEN", "top_secret")
-	t.Setenv("DUNEBOT_REPOSITORY_ENDPOINT", "dunebot_endpoint")
 	cfg, err := LoadConfig()
 	assert.NoError(t, err)
 
 	assert.Equal(t, "top_secret", cfg.GithubToken)
-	assert.Equal(t, "dunebot_endpoint", cfg.RepositoryEndpoint)
 }
 
 func TestLoadConfigError(t *testing.T) {
-	t.Setenv("DUNEBOT_GITHUB_TOKEN", "top_secret")
-	os.Unsetenv("DUNEBOT_REPOSITORY_ENDPOINT")
-
-	fmt.Printf("DUNEBOT_REPOSITORY_ENDPOINT '%s'", os.Getenv("DUNEBOT_REPOSITORY_ENDPOINT"))
+	os.Unsetenv("DUNEBOT_GITHUB_TOKEN")
+	fmt.Printf("DUNEBOT_GITHUB_TOKEN '%s'", os.Getenv("DUNEBOT_GITHUB_TOKEN"))
 
 	_, err := LoadConfig()
-	assert.ErrorContains(t, err, "required key REPOSITORY_ENDPOINT missing value")
+	assert.ErrorContains(t, err, "required key GITHUB_TOKEN missing value")
 }

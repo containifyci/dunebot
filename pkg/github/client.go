@@ -39,6 +39,8 @@ type IssueComment = github.IssueComment
 type Label = github.Label
 type ListCursorOptions = github.ListCursorOptions
 type ListOptions = github.ListOptions
+type RepositoryListByAuthenticatedUserOptions = github.RepositoryListByAuthenticatedUserOptions
+
 type PullRequest = github.PullRequest
 type PullRequestListOptions = github.PullRequestListOptions
 type PullRequestBranch = github.PullRequestBranch
