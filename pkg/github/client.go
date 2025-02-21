@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v66/github"
+	"github.com/google/go-github/v69/github"
 	"github.com/rs/zerolog/log"
 
 	"golang.org/x/oauth2"
@@ -23,16 +23,17 @@ import (
 
 type PullRequestEvent = github.PullRequestEvent
 
-var Int = github.Int
-var Int64 = github.Int64
-var String = github.String
-var Bool = github.Bool
+var Int = github.Ptr[int]
+var Int64 = github.Ptr[int64]
+var String = github.Ptr[string]
+var Bool = github.Ptr[bool]
 
 type Client = github.Client
 
 type Response = github.Response
 
 type CheckRun = github.CheckRun
+type DeployKeyEvent = github.DeployKeyEvent
 type GitHubAppAuthorizationEvent = github.GitHubAppAuthorizationEvent
 type Installation = github.Installation
 type IssueComment = github.IssueComment
@@ -307,7 +308,7 @@ func (cli GithubClient) GetPRComments(prNumber int) ([]*github.IssueComment, err
 
 func (cli GithubClient) ApprovePullRequest(prNumber int) TemplatedError {
 	_, _, err := cli.Client.PullRequests.CreateReview(cli.ctx, cli.cfg.GitHubOwner, cli.cfg.GitHubRepository, prNumber, &github.PullRequestReviewRequest{
-		Event: github.String("APPROVE"),
+		Event: String("APPROVE"),
 	})
 	if err != nil {
 		cli.logger.Error("Error merging PR", "error", err)

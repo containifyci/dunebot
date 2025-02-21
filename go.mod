@@ -7,7 +7,7 @@ require (
 	github.com/containifyci/oauth2-storage v0.2.0
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/google/go-github/v66 v66.0.0
+	github.com/google/go-github/v69 v69.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/palantir/go-githubapp v0.33.0
@@ -43,7 +43,6 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/go-github/v68 v68.0.0 // indirect
-	github.com/google/go-github/v69 v69.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
