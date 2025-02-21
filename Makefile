@@ -8,10 +8,7 @@ lint:
 dep:
 	go mod tidy
 
-gen:
-	protoc -I=pkg/proto/ --go-grpc_out=pkg/proto --plugin=grpc  --go_out=pkg/proto pkg/proto/token_service.proto
-
-build: gen
+build:
 	go build -o build/dunebot main.go
 
 test:

@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-github/v66/github"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 
@@ -30,41 +29,41 @@ const (
 	MergeAndRebaseMerge
 )
 
-func GivenGithubRepository(mode GivenGithubRepositoryCommitModes) github.Repository {
+func GivenGithubRepository(mode GivenGithubRepositoryCommitModes) Repository {
 	switch mode {
 	case Merge:
-		return github.Repository{AllowMergeCommit: github.Bool(true)}
+		return Repository{AllowMergeCommit: Bool(true)}
 	case RebaseMerge:
-		return github.Repository{AllowRebaseMerge: github.Bool(true)}
+		return Repository{AllowRebaseMerge: Bool(true)}
 	case OnlyRebaseMerge:
-		return github.Repository{AllowMergeCommit: github.Bool(false), AllowRebaseMerge: github.Bool(true)}
+		return Repository{AllowMergeCommit: Bool(false), AllowRebaseMerge: Bool(true)}
 	case SquashMerge:
-		return github.Repository{AllowSquashMerge: github.Bool(true)}
+		return Repository{AllowSquashMerge: Bool(true)}
 	case RebaseAndSquashMerge:
-		return github.Repository{AllowRebaseMerge: github.Bool(true), AllowSquashMerge: github.Bool(true)}
+		return Repository{AllowRebaseMerge: Bool(true), AllowSquashMerge: Bool(true)}
 	case MergeAndSquashMerge:
-		return github.Repository{AllowMergeCommit: github.Bool(true), AllowSquashMerge: github.Bool(true)}
+		return Repository{AllowMergeCommit: Bool(true), AllowSquashMerge: Bool(true)}
 	case MergeAndRebaseMerge:
-		return github.Repository{AllowMergeCommit: github.Bool(true), AllowRebaseMerge: github.Bool(true)}
+		return Repository{AllowMergeCommit: Bool(true), AllowRebaseMerge: Bool(true)}
 	case None:
-		return github.Repository{AllowMergeCommit: github.Bool(false), AllowRebaseMerge: github.Bool(false), AllowSquashMerge: github.Bool(false)}
+		return Repository{AllowMergeCommit: Bool(false), AllowRebaseMerge: Bool(false), AllowSquashMerge: Bool(false)}
 	case All:
 		fallthrough
 	default:
-		return github.Repository{AllowMergeCommit: github.Bool(true), AllowRebaseMerge: github.Bool(true), AllowSquashMerge: github.Bool(true)}
+		return Repository{AllowMergeCommit: Bool(true), AllowRebaseMerge: Bool(true), AllowSquashMerge: Bool(true)}
 	}
 }
 
 func GivenTestMergePullRequest(name, method string, mode GivenGithubRepositoryCommitModes, expectedMethod string) struct {
 	name           string
 	method         string
-	repo           github.Repository
+	repo           Repository
 	expectedMethod string
 } {
 	return struct {
 		name           string
 		method         string
-		repo           github.Repository
+		repo           Repository
 		expectedMethod string
 	}{
 		name:           name,
@@ -201,8 +200,8 @@ func TestAddComment(t *testing.T) {
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
 
-	repo := &github.Repository{
-		Owner: &github.User{Login: String("test-owner")},
+	repo := &Repository{
+		Owner: &User{Login: String("test-owner")},
 		Name:  String("test-repo"),
 	}
 
@@ -280,7 +279,7 @@ func TestMergePullRequest(t *testing.T) {
 		name   string
 		prNum  int
 		method string
-		repo   github.Repository
+		repo   Repository
 		err    error
 	}{
 		{name: "merge", prNum: 1, method: "merge", repo: GivenGithubRepository(OnlyRebaseMerge)},
