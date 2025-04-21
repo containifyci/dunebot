@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"time"
 
-	"golang.org/x/exp/rand"
+	"math/rand/v2"
 )
 
 type Waiter interface {
@@ -26,7 +26,7 @@ func New(count int) Waiter {
 	maxBackoff := 2 * time.Minute
 	baseDelay := 10 * time.Second
 
-	backoffDuration := time.Duration(rand.Int63n(int64(maxBackoff-baseDelay))) + baseDelay
+	backoffDuration := time.Duration(rand.Int64N(int64(maxBackoff-baseDelay))) + baseDelay
 	return &SleepWaiter{
 		count:    count,
 		duration: backoffDuration,
