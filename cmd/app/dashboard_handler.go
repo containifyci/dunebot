@@ -71,7 +71,12 @@ func DashboardHandler(cfg *config.Config, appClient *github.Client, ghc github.G
 		accessToken := authSrv.CreateTokenFnc(auth.ServiceClaims{ServiceName: "dunebot"})
 
 		tokenClient, close, err := appoauth.NewClient(*appoauth.NewAuthInterceptor(accessToken), cfg.JWT.Address)
-		defer close()
+		defer func() {
+			err := close()
+			if err != nil {
+				log.Error().Err(err).Msgf("Failed to close gRPC connection: %v\n", err)
+			}
+		}()
 		if err != nil {
 			log.Error().Err(err).Msgf("Failed to connect to gRPC server: %v\n", err)
 			http.Error(w, "Failed to connect to gRPC server", http.StatusInternalServerError)

@@ -12,7 +12,6 @@ import (
 	"github.com/alexedwards/scs"
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/palantir/go-githubapp/oauth2"
-	poauth2 "github.com/palantir/go-githubapp/oauth2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,7 +37,7 @@ func TestRequireLoginWithLoggedInUser(t *testing.T) {
 			Client: makeTestGithubClient(makeTestClient()).Client(),
 		})
 	})
-	mux.Handle(poauth2.DefaultRoute, handler)
+	mux.Handle(oauth2.DefaultRoute, handler)
 
 	cli := newTestClient(ts, true)
 

@@ -95,7 +95,7 @@ func TestTokenSourceFrom(t *testing.T) {
 
 	srv := NewMockOAuth2Server()
 	defer srv.Close()
-	config.OAuth2Config.Endpoint = srv.Endpoint()
+	config.Endpoint = srv.Endpoint()
 
 	ctx := context.Background()
 	tokenSource := config.TokenSourceFrom(ctx)

@@ -266,14 +266,12 @@ func TestLoadLocalConfig(t *testing.T) {
 }
 
 func TestLoadConfigFromTestData(t *testing.T) {
-	t.Parallel()
-
 	testDataPath, err := filepath.Abs("./testdata")
 	if err != nil {
 		t.Fatalf("Failed to resolve test data path: %v", err)
 	}
-	os.Setenv("LOCAL_CONFIG_PATH", testDataPath)
-	defer os.Unsetenv("LOCAL_CONFIG_PATH") // Clean up after this test
+	t.Setenv("LOCAL_CONFIG_PATH", testDataPath)
+	defer os.Clearenv() // Clean up after this test
 	appConfig, _, err := LoadConfig(context.Background(), nil, "owner", "repo", "ref")
 
 	assert.NoError(t, err)

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMockOAuth2Server(t *testing.T) {
@@ -28,7 +29,10 @@ func TestMockOAuth2Server(t *testing.T) {
 		}
 		resp, err := client.Get(server.Endpoint().AuthURL)
 		assert.NoError(t, err)
-		defer resp.Body.Close()
+		defer func() {
+			err := resp.Body.Close()
+			require.NoError(t, err)
+		}()
 
 		// assert.Equal(t, http.StatusFound, resp.StatusCode)
 		assert.Equal(t, "http://localhost:8080/oauth2/callback?code=mockcode", resp.Header.Get("Location"))
@@ -43,7 +47,10 @@ func TestMockOAuth2Server(t *testing.T) {
 			"grant_type":    {"authorization_code"},
 		})
 		assert.NoError(t, err)
-		defer resp.Body.Close()
+		defer func() {
+			err := resp.Body.Close()
+			require.NoError(t, err)
+		}()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		body, err := io.ReadAll(resp.Body)
@@ -58,7 +65,10 @@ func TestMockOAuth2Server(t *testing.T) {
 	t.Run("Device Endpoint", func(t *testing.T) {
 		resp, err := http.Post(server.Endpoint().DeviceAuthURL, "application/json", strings.NewReader(`{}`))
 		assert.NoError(t, err)
-		defer resp.Body.Close()
+		defer func() {
+			err := resp.Body.Close()
+			require.NoError(t, err)
+		}()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		body, err := io.ReadAll(resp.Body)
