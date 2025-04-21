@@ -17,7 +17,7 @@ func TestLoadRequiredConfig(t *testing.T) {
 }
 
 func TestLoadConfigError(t *testing.T) {
-	os.Unsetenv("DUNEBOT_GITHUB_TOKEN")
+	os.Clearenv()
 	fmt.Printf("DUNEBOT_GITHUB_TOKEN '%s'", os.Getenv("DUNEBOT_GITHUB_TOKEN"))
 
 	_, err := LoadConfig()

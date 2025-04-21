@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/containifyci/dunebot/pkg/config/testdata"
 )
@@ -19,7 +20,10 @@ func TestGetConfigWithValidPath(t *testing.T) {
 
 	// Mock a valid config file path
 	configFilePath := createTempConfigFile(cnt)
-	defer os.Remove(configFilePath)
+	defer func() {
+		err := os.Remove(configFilePath)
+		require.NoError(t, err, "Error removing temporary config file")
+	}()
 
 	// Call the GetConfig function
 	config, err := GetConfig(configFilePath)
@@ -63,7 +67,10 @@ func TestReadConfigWithInvalidContent(t *testing.T) {
 	// Create a temporary file to write the invalid config content
 	tmpFile, err := os.CreateTemp("", "invalid-config-test-*.yaml")
 	assert.NoError(t, err, "Error creating temporary file")
-	defer os.Remove(tmpFile.Name())
+	defer func() {
+		err := os.Remove(tmpFile.Name())
+		require.NoError(t, err, "Error removing temporary config file")
+	}()
 
 	// Write the invalid config content to the temporary file
 	_, err = tmpFile.Write(invalidConfigContent)
@@ -232,8 +239,12 @@ func createTempConfigFile(content []byte) string {
 	if err != nil {
 		panic(err)
 	}
-	defer tmpFile.Close()
-
+	defer func() {
+		err := tmpFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 	_, err = tmpFile.Write(content)
 	if err != nil {
 		panic(err)

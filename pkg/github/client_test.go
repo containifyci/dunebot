@@ -374,11 +374,7 @@ func TestRetry(t *testing.T) {
 			retry := newRetry(tt.pauseTime, tt.maxWaitTime, tt.maxAttempts)
 			retry.init()
 			retry.start(tt.name)
-			for {
-				// do something
-				if retry.retryExceeded() {
-					break
-				}
+			for !retry.retryExceeded() {
 				retry.increment()
 				time.Sleep(retry.PauseTime)
 			}

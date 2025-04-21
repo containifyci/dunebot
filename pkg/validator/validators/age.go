@@ -38,8 +38,8 @@ func (v ValidationAge) Validate(results *ValidationResults) bool {
 		return true
 	}
 	now := time.Now().Add(-1 * v.Age.Duration).UTC()
-	if now.Unix() <= createdAt.Time.Unix() {
-		diff := createdAt.Time.Sub(now)
+	if now.Unix() <= createdAt.Unix() {
+		diff := createdAt.Sub(now)
 		if v.Branch != nil {
 			results.AddBranchResult(v.Branch.Key, v.Branch.Prefix, "age", "Pull request age is less than required (%s) for %s", diff.Round(1*time.Minute), v.Type)
 		} else {

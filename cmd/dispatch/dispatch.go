@@ -92,7 +92,12 @@ func listDuneBotRepositories(ctx context.Context, cfg *dispatchConfig) ([]string
 		log.Error().Err(err).Msgf("Error making GET request: %v", err)
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		err := resp.Body.Close()
+		if err != nil {
+			log.Error().Err(err).Msgf("Error closing response body: %v", err)
+		}
+	}()
 
 	// Check if the request was successful
 	if resp.StatusCode != http.StatusOK {

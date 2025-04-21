@@ -62,7 +62,7 @@ func SetupGRPCClient(t *testing.T, user string, tokens ...string) Config {
 		User:            user,
 		OAuth2Config:    GetConfig(&cfg2),
 	}
-	config.OAuth2Config.Endpoint.AuthURL = fmt.Sprintf("http://localhost:%d", cfg.GRPCPort)
+	config.Endpoint.AuthURL = fmt.Sprintf("http://localhost:%d", cfg.GRPCPort)
 	return config
 }
 
@@ -150,6 +150,11 @@ func GetFreePort() int {
 	if err != nil {
 		panic(err)
 	}
-	defer l.Close()
+	defer func() {
+		err := l.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 	return l.Addr().(*net.TCPAddr).Port
 }
