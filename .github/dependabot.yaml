@@ -26,6 +26,17 @@ updates:
         update-types:
         - "minor"
         - "patch"
+  - package-ecosystem: "gomod"
+    directory: ".containifyci"
+    schedule:
+      interval: "daily"
+    groups:
+      minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
   - package-ecosystem: "docker"
     directory: "."
     schedule:
