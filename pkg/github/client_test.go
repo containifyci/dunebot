@@ -10,6 +10,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/containifyci/dunebot/pkg/github/testdata"
 	"github.com/containifyci/dunebot/pkg/logger"
@@ -126,7 +127,7 @@ func TestWaitForPRChecksToPass(t *testing.T) {
 			passed, err := client.WaitForPRChecksToPass(&retry, "main", "sha", "push", tt.states...)
 
 			if tt.passed {
-				assert.NoError(t, err, "Should not have error when checks are expected to pass")
+				require.NoError(t, err, "Should not have error when checks are expected to pass")
 			} else {
 				assert.Error(t, err, "Should have error when checks are expected to fail")
 			}
@@ -185,7 +186,7 @@ func TestAddRebaseComment(t *testing.T) {
 			if tt.err != nil {
 				assert.ErrorContains(t, err, tt.err.Error())
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		})
 	}
@@ -219,7 +220,7 @@ func TestAddComment(t *testing.T) {
 			if tt.err != nil {
 				assert.ErrorContains(t, err, tt.err.Error())
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		})
 	}
@@ -256,7 +257,7 @@ func TestWaitForRebase(t *testing.T) {
 			retry := Retry{PauseTime: 1 * time.Millisecond, MaxAttempts: tt.attempts}
 			sha, updatedPr, err := client.WaitForRebase(&retry, pr)
 			if tt.attempts < 10 {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			} else {
 				assert.Error(t, err)
 			}
@@ -291,19 +292,40 @@ func TestMergePullRequest(t *testing.T) {
 			if tt.err != nil {
 				assert.ErrorContains(t, err, tt.err.Error())
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		})
 	}
 }
 
-type logSink struct{ logs []string }
+func TestGetStatuses(t *testing.T) {
+	t.Parallel()
 
-func (l *logSink) Index(i int) string { return l.logs[i] }
+	client := NewClient(
+		WithGithubClient(makeTestClient()),
+		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
+	)
 
-func (l *logSink) Write(p []byte) (n int, err error) {
-	l.logs = append(l.logs, string(p))
-	return len(p), nil
+	tests := []struct {
+		name  string
+		state string
+		sha   string
+	}{
+		{name: "lint", state: "failure", sha: "sha1"},
+		{name: "build", state: "completed", sha: "sha2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pr := &PullRequest{
+				Head: &PullRequestBranch{
+					SHA: String(tt.sha),
+				},
+			}
+			res, err := client.GetStatuses(pr)
+			require.NoError(t, err)
+			assert.Equal(t, tt.state, res[0].State)
+		})
+	}
 }
 
 func TestPrettyJSON(t *testing.T) {
@@ -431,4 +453,13 @@ func newRetry(pauseTime *time.Duration, maxWaitTime *time.Duration, maxAttempts 
 func makeTestClient() *Client {
 	rp := testdata.NewResponsePlayer("testdata")
 	return Newclient(&http.Client{Transport: rp})
+}
+
+type logSink struct{ logs []string }
+
+func (l *logSink) Index(i int) string { return l.logs[i] }
+
+func (l *logSink) Write(p []byte) (n int, err error) {
+	l.logs = append(l.logs, string(p))
+	return len(p), nil
 }

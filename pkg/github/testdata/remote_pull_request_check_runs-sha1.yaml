@@ -1,0 +1,12 @@
+- url: /repos/test-owner/test-repo/commits/sha1/check-runs
+  status: 200
+  body: |
+    {
+      "total_count": 1,
+      "check_runs": [
+        {
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ]
+    }
