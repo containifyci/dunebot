@@ -16,11 +16,11 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	go.temporal.io/api v1.49.0
+	go.temporal.io/api v1.49.1
 	go.temporal.io/sdk v1.34.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
-	golang.org/x/oauth2 v0.29.0
-	google.golang.org/grpc v1.72.0
+	golang.org/x/oauth2 v0.30.0
+	google.golang.org/grpc v1.72.1
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
