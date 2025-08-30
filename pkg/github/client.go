@@ -413,7 +413,7 @@ func (cli GithubClient) GetStatuses(pr *github.PullRequest) (Statuses, error) {
 
 		for _, s := range checkRuns.CheckRuns {
 			// map check run conclusion to status to simplify the validation
-			if s.GetConclusion() != "success" && s.GetConclusion() != "neutral" && s.GetConclusion() != "skipped" {
+			if s.GetConclusion() != "" && s.GetConclusion() != "success" && s.GetConclusion() != "neutral" && s.GetConclusion() != "skipped" {
 				cli.logger.Debug("Check run %s has conclusion %s.", s.GetName(), s.GetConclusion())
 				statuses = append(statuses, &Status{Name: s.GetName(), State: s.GetConclusion()})
 				continue
