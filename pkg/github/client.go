@@ -620,6 +620,11 @@ func (cli GithubClient) WaitForStatusChecks(retry Retry, sha string, pr *github.
 		//TODO make it possible to define required checks in config (not GitHub branch protection checks)
 		//Please implement code the fullfill the following requirement. Iterate over statuses and log a debug messager and return false if an entries state is not success, neutral or skipped
 		for _, s := range statuses {
+			if s.State == "" {
+				cli.logger.Debug("Status has no state", "name", s.Name)
+				inProgres = true
+				break
+			}
 			if s.State != "success" && s.State != "neutral" && s.State != "skipped" && s.State != "completed" && s.State != "in_progress" && s.State != "queued" {
 				cli.logger.Debug("Status has a different state then is not success, neutral, skipped, completed, in_progress or queued", "name", s.Name, "state", s.State)
 				return false, NewStatusCheckError(fmt.Sprintf("Status '%s' has a different state '%s' then is not success, neutral, skipped, completed, in_progress or queued", s.Name, s.State))
