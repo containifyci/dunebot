@@ -3,8 +3,8 @@ module .containifyci
 go 1.24.2
 
 require (
-	github.com/containifyci/engine-ci/client v0.19.0
-	github.com/containifyci/engine-ci/protos2 v0.17.0
+	github.com/containifyci/engine-ci/client v0.19.1
+	github.com/containifyci/engine-ci/protos2 v0.18.2
 )
 
 require (
@@ -20,7 +20,7 @@ require (
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
-	google.golang.org/grpc v1.75.0 // indirect
-	google.golang.org/protobuf v1.36.8 // indirect
+	google.golang.org/grpc v1.75.1 // indirect
+	google.golang.org/protobuf v1.36.9 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
