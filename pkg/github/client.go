@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v74/github"
+	"github.com/google/go-github/v75/github"
 	"github.com/rs/zerolog/log"
 
 	"golang.org/x/oauth2"
