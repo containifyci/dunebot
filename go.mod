@@ -7,7 +7,7 @@ require (
 	github.com/containifyci/go-self-update v0.2.4
 	github.com/containifyci/oauth2-storage v0.2.1
 	github.com/gofri/go-github-ratelimit v1.1.1
-	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/go-github/v81 v81.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -17,7 +17,7 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
-	go.temporal.io/api v1.61.0
+	go.temporal.io/api v1.62.0
 	go.temporal.io/sdk v1.39.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
 	golang.org/x/oauth2 v0.34.0
