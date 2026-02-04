@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -150,16 +149,6 @@ func setupHttpServeMux(cfg *config.Config) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.Handle(githubapp.DefaultWebhookRoute, webhookHandler)
-
-	mux.Handle("/api/metric/queue", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		entries := prQueue.Entries()
-		log.Debug().Msgf("Entries %v+\n", entries)
-		err := json.NewEncoder(w).Encode(entries)
-		if err != nil {
-			log.Error().Err(err).Msgf("Failed to write queue response: %v\n", err)
-		}
-	}))
 
 	mux.Handle("/health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
