@@ -36,7 +36,7 @@ func TestExecute(t *testing.T) {
 	rootCmd.SetArgs([]string{"dispatch"})
 
 	err := rootCmd.Execute()
-	assert.ErrorContains(t, err, "401 Bad credentials")
+	assert.ErrorContains(t, err, "403")
 }
 
 func TestRun(t *testing.T) {
