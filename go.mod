@@ -11,7 +11,7 @@ require (
 	github.com/google/go-github/v83 v83.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/palantir/go-githubapp v0.42.0
+	github.com/palantir/go-githubapp v0.43.0
 	github.com/pkg/errors v0.9.1
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9
 	github.com/rs/zerolog v1.34.0
@@ -43,6 +43,7 @@ require (
 	github.com/google/gnostic-models v0.7.0 // indirect
 	github.com/google/go-github/v66 v66.0.0 // indirect
 	github.com/google/go-github/v75 v75.0.0 // indirect
+	github.com/google/go-github/v84 v84.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
