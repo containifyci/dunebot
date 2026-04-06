@@ -3,7 +3,7 @@ module .containifyci
 go 1.25.5
 
 require (
-	github.com/containifyci/engine-ci/client v0.27.4
+	github.com/containifyci/engine-ci/client v0.28.0
 	github.com/containifyci/engine-ci/protos2 v0.24.2
 )
 
