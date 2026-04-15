@@ -129,22 +129,27 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 
 		cfg := r.config
 
-		oauth2cfg := oauth2.Config{
-			InstallationId:  fmt.Sprintf("%d", installationId),
-			User:            appCfg.Approve.Approver,
-			Ctx:             ctx,
-			OAuth2Config:    cfg.Config().ToOAuth2Config(),
-			AuthInterceptor: *oauth2.NewAuthInterceptor(accessToken),
-			Addr:            cfg.Config().JWT.Address,
+		//by default use the Github App Installation token
+		ghu := gh
+
+		if appCfg.Approve.Approver != "" {
+			oauth2cfg := oauth2.Config{
+				InstallationId:  fmt.Sprintf("%d", installationId),
+				User:            appCfg.Approve.Approver,
+				Ctx:             ctx,
+				OAuth2Config:    cfg.Config().ToOAuth2Config(),
+				AuthInterceptor: *oauth2.NewAuthInterceptor(accessToken),
+				Addr:            cfg.Config().JWT.Address,
+			}
+
+			opts := []github.Option{github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx), github.WithConfig(github.NewRepositoryConfig(repoOwner, repoName))}
+			if r.transport != nil {
+				cli := http.DefaultClient
+				cli.Transport = r.transport
+				opts = append(opts, github.WithHttpClient(cli))
+			}
+			ghu = github.NewClient(opts...)
 		}
-		// ghu := github.NewClient(github.WithConfig(cfg))
-		opts := []github.Option{github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx), github.WithConfig(github.NewRepositoryConfig(repoOwner, repoName))}
-		if r.transport != nil {
-			cli := http.DefaultClient
-			cli.Transport = r.transport
-			opts = append(opts, github.WithHttpClient(cli))
-		}
-		ghu := github.NewClient(opts...)
 
 		sha := pr.GetHead().GetSHA()
 
