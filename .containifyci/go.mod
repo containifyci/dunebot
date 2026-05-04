@@ -3,15 +3,15 @@ module .containifyci
 go 1.25.5
 
 require (
-	github.com/containifyci/engine-ci/client v0.29.0
-	github.com/containifyci/engine-ci/protos2 v0.25.0
+	github.com/containifyci/engine-ci/client v0.30.0
+	github.com/containifyci/engine-ci/protos2 v0.26.0
 )
 
 require (
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
-	github.com/hashicorp/go-plugin v1.7.0 // indirect
+	github.com/hashicorp/go-plugin v1.8.0 // indirect
 	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
