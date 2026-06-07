@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/alexedwards/scs v1.4.1
-	github.com/containifyci/go-self-update v0.2.5
+	github.com/containifyci/go-self-update v0.2.7
 	github.com/containifyci/oauth2-storage v0.2.2
 	github.com/gofri/go-github-ratelimit v1.1.1
 	github.com/golang-jwt/jwt/v5 v5.3.1
@@ -53,7 +53,7 @@ require (
 	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	golang.org/x/crypto v0.50.0 // indirect
-	golang.org/x/mod v0.35.0 // indirect
+	golang.org/x/mod v0.36.0 // indirect
 	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.43.0 // indirect
