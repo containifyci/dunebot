@@ -18,7 +18,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	go.temporal.io/api v1.62.14
-	go.temporal.io/sdk v1.44.1
+	go.temporal.io/sdk v1.45.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
 	golang.org/x/oauth2 v0.36.0
 	google.golang.org/grpc v1.81.1
