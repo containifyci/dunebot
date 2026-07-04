@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v85/github"
+	"github.com/google/go-github/v88/github"
 	"github.com/rs/zerolog/log"
 
 	"golang.org/x/oauth2"
@@ -56,6 +56,8 @@ type User = github.User
 type WorkflowRun = github.WorkflowRun
 
 var Newclient = github.NewClient
+var WithhttpClient = github.WithHTTPClient
+var WithuRLs = github.WithURLs
 
 type Retry struct {
 	Attempts  int
@@ -76,61 +78,67 @@ type GithubClient struct {
 }
 
 type GithubClientCreator interface {
-	NewClient(opts ...Option) GithubClient
+	NewClient(opts ...Option) (*GithubClient, error)
 }
 
-type Option func(*GithubClient)
+type Option func(*GithubClient) error
 
 func WithContext(ctx context.Context) Option {
-	return func(g *GithubClient) {
+	return func(g *GithubClient) error {
 		g.ctx = ctx
+		return nil
 	}
 }
 
 func WithConfig(cfg Config) Option {
-	return func(g *GithubClient) {
+	return func(g *GithubClient) error {
 		g.cfg = cfg
+		return nil
 	}
 }
 
 func WithLogger(logger logger.Logger) Option {
-	return func(g *GithubClient) {
+	return func(g *GithubClient) error {
 		g.logger = logger
+		return nil
 	}
 }
 
 func WithHttpClient(cli *http.Client) Option {
-	return func(g *GithubClient) {
-		g.Client = github.NewClient(cli)
+	return func(g *GithubClient) error {
+		c, err := github.NewClient(github.WithHTTPClient(cli))
+		g.Client = c
+		return err
 	}
 }
 
 func WithGithubClient(cli *github.Client) Option {
-	return func(g *GithubClient) {
+	return func(g *GithubClient) error {
 		g.Client = cli
+		return nil
 	}
 }
 
 func WithTokenSource(tokenSource oauth2.TokenSource) Option {
-	return func(g *GithubClient) {
+	return func(g *GithubClient) error {
 		g.tokenSource = tokenSource
+		return nil
 	}
 }
 
-func NewGithubClient(cli *http.Client) *github.Client {
-	return github.NewClient(cli)
-}
-
-func (gc *GithubClient) NewClient(opts ...Option) GithubClient {
+func (gc *GithubClient) NewClient(opts ...Option) (*GithubClient, error) {
 	return NewClient(opts...)
 }
 
-func NewClient(opts ...Option) GithubClient {
+func NewClient(opts ...Option) (*GithubClient, error) {
 
 	gc := GithubClient{}
 
 	for _, opt := range opts {
-		opt(&gc)
+		err := opt(&gc)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if gc.ctx == nil {
@@ -157,11 +165,11 @@ func NewClient(opts ...Option) GithubClient {
 			panic(err)
 		}
 
-		gc.Client = github.NewClient(rateLimiter)
-		gc.Client.BaseURL.Host = gc.cfg.GitHubAPIHost
-		gc.Client.BaseURL.Scheme = gc.cfg.GitHubAPIScheme
+		baseURL := fmt.Sprintf("%s://%s", gc.cfg.GitHubAPIScheme, gc.cfg.GitHubAPIHost)
+		ghCli, err := github.NewClient(github.WithHTTPClient(rateLimiter), github.WithURLs(&baseURL, nil))
+		gc.Client = ghCli
 	}
-	return gc
+	return &gc, nil
 }
 
 func (cli *GithubClient) WaitForPRChecksToPassMain(retry *Retry, branch string, sha string, requiredStates ...string) (bool, TemplatedError) {

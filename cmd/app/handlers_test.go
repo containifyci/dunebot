@@ -152,7 +152,11 @@ func makeTestClient() *testdata.ResponsePlayer {
 }
 
 func makeTestGithubClient(rp *testdata.ResponsePlayer) *github.Client {
-	return github.NewGithubClient(&http.Client{Transport: rp})
+	cli, err := github.NewClient(github.WithHttpClient(&http.Client{Transport: rp}))
+	if err != nil {
+		panic(err)
+	}
+	return cli.Client
 }
 
 func createPrivaseRSAKey() (string, error) {

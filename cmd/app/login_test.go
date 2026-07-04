@@ -48,7 +48,7 @@ func TestRequireLoginWithLoggedInUser(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	assert.Equal(t, string(body), "User is logged in OK")
+	assert.Equal(t, "User is logged in OK", string(body))
 }
 
 func TestRequireLoginWithUnauthenticatedUser(t *testing.T) {

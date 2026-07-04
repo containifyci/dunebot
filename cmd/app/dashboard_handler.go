@@ -109,7 +109,12 @@ func DashboardHandler(cfg *config.Config, appClient *github.Client, ghc github.G
 			Addr:            cfg.JWT.Address,
 		}
 
-		ghu := ghc.NewClient(github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx), github.WithConfig(github.NewConfig()) /*, github.WithConfig(github.NewRepositoryConfig(repoOwner, repoName))*/)
+		ghu, err := ghc.NewClient(github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx), github.WithConfig(github.NewConfig()) /*, github.WithConfig(github.NewRepositoryConfig(repoOwner, repoName))*/)
+		if err != nil {
+			log.Error().Err(err).Msgf("Error initialise github Client: %v\n", err)
+			http.Error(w, "Error initialise github Client", http.StatusInternalServerError)
+			return
+		}
 
 		githubUser, _, err := ghu.Client.Users.Get(ctx, "")
 		if err != nil {

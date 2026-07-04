@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"net/http"
-	"net/url"
-	"strings"
 
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
@@ -21,16 +19,11 @@ const (
 
 func Login(c config.GithubConfig, sessions *scs.Manager) oauth2.LoginCallback {
 	return func(w http.ResponseWriter, r *http.Request, login *oauth2.Login) {
-		client := github.Newclient(login.Client)
-
-		// TODO(bkeyes): this should be in baseapp or something
-		// I should be able to get a valid, parsed URL
-		u, err := url.Parse(strings.TrimSuffix(c.V3APIURL, "/") + "/")
+		client, err := github.Newclient(github.WithhttpClient(login.Client))
 		if err != nil {
-			log.Error().Err(err).Msgf("failed to parse github url: %s", err)
+			log.Error().Err(err).Msgf("failed to initialise github Client")
 			return
 		}
-		client.BaseURL = u
 
 		user, _, err := client.Users.Get(r.Context(), "")
 		if err != nil {

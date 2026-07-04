@@ -11,6 +11,7 @@ import (
 
 	"github.com/containifyci/dunebot/cmd"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/containifyci/dunebot/pkg/github"
 	"github.com/containifyci/dunebot/pkg/github/testdata"
@@ -50,8 +51,9 @@ func TestRun(t *testing.T) {
 	tc.AddDynamicRule("/repos/test-owner/test-repo/dispatches", "",
 		testdata.NewResponseHandler(AssertDispatchRequest(t, 1)), testdata.NewResponseHandler(AssertDispatchRequest(t, 2)))
 
-	gh := github.NewClient(github.WithGithubClient(tc.Client))
-	err := run(cfg, gh)
+	gh, err := github.NewClient(github.WithGithubClient(tc.Client))
+	require.NoError(t, err)
+	err = run(cfg, gh)
 	assert.NoError(t, err)
 }
 
@@ -71,8 +73,9 @@ func TestRunWithDryRun(t *testing.T) {
 		}
 	}))
 
-	gh := github.NewClient(github.WithGithubClient(tc.Client))
-	err := run(cfg, gh)
+	gh, err := github.NewClient(github.WithGithubClient(tc.Client))
+	require.NoError(t, err)
+	err = run(cfg, gh)
 	assert.NoError(t, err)
 }
 
@@ -92,9 +95,9 @@ func TestRunWithRepoFilter(t *testing.T) {
 
 	tc.AddDynamicRule("/repos/test-owner/test-repo/dispatches", "", h1, h2)
 
-	gh := github.NewClient(github.WithGithubClient(tc.Client))
-
-	err := run(cfg, gh)
+	gh, err := github.NewClient(github.WithGithubClient(tc.Client))
+	require.NoError(t, err)
+	err = run(cfg, gh)
 	assert.NoError(t, err)
 
 	assert.True(t, h1.Called, "Expected handler to be called")
@@ -115,8 +118,9 @@ func TestRunDispatchError(t *testing.T) {
 		}
 	}))
 
-	gh := github.NewClient(github.WithGithubClient(tc.Client))
-	err := run(cfg, gh)
+	gh, err := github.NewClient(github.WithGithubClient(tc.Client))
+	require.NoError(t, err)
+	err = run(cfg, gh)
 	assert.ErrorContains(t, err, "500  []")
 }
 
@@ -178,9 +182,13 @@ func TestListDuneBotRepositoriesError(t *testing.T) {
 
 func makeTestClient() TestGithubClient {
 	rp := testdata.NewResponsePlayer("../testdata")
+	cli, err := github.Newclient(github.WithhttpClient(&http.Client{Transport: rp}))
+	if err != nil {
+		panic(err)
+	}
 	return TestGithubClient{
 		rp,
-		github.Newclient(&http.Client{Transport: rp}),
+		cli,
 	}
 }
 

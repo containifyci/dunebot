@@ -95,10 +95,14 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 		return err
 	}
 
-	gh := github.NewClient(github.WithLogger(r.logger), github.WithGithubClient(client), github.WithContext(ctx), github.WithConfig(github.Config{
+	gh, err := github.NewClient(github.WithLogger(r.logger), github.WithGithubClient(client), github.WithContext(ctx), github.WithConfig(github.Config{
 		GitHubRepository: repoName,
 		GitHubOwner:      repoOwner,
 	}))
+	if err != nil {
+		r.logger.Error("Error initialise github Client", "error", err)
+		return err
+	}
 	pr, _, err = gh.Client.PullRequests.Get(ctx, repoOwner, repoName, prNum)
 	if err != nil {
 		r.logger.Error("Error getting PR", "error", err)
@@ -110,7 +114,7 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 		return nil
 	}
 
-	prC := github.NewPullRequestClient(&gh, pr)
+	prC := github.NewPullRequestClient(gh, pr)
 	validator := validator.NewValidator(appCfg)
 
 	approveResult := validator.ValidateApproveConditions(prC)
@@ -148,7 +152,11 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 				cli.Transport = r.transport
 				opts = append(opts, github.WithHttpClient(cli))
 			}
-			ghu = github.NewClient(opts...)
+			ghu, err = github.NewClient(opts...)
+			if err != nil {
+				r.logger.Error("Error initialise github user Client", "error", err)
+				return err
+			}
 		}
 
 		sha := pr.GetHead().GetSHA()
@@ -194,7 +202,7 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 			return nil
 		}
 
-		approveResult = validator.ValidateApproveCommentsAndChecks(github.NewPullRequestClient(&gh, pr))
+		approveResult = validator.ValidateApproveCommentsAndChecks(github.NewPullRequestClient(gh, pr))
 		if !approveResult.Success {
 			r.logger.Debug("PR can not be approved.", "reason", approveResult.Results)
 			_, _ = gh.AddComment(repo, prNum, approveResult.String())
@@ -209,7 +217,7 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 			gh.AddCommentSilent(repo, prNum, tmplErr)
 			return tmplErr
 		}
-		mergeResult := validator.ValidateMergeConditions(github.NewPullRequestClient(&gh, pr))
+		mergeResult := validator.ValidateMergeConditions(github.NewPullRequestClient(gh, pr))
 		if !mergeResult.Success {
 			r.logger.Debug("PR is not mergeable.", "result", mergeResult.Results)
 			_, _ = gh.AddComment(repo, prNum, mergeResult.String())

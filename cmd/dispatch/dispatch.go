@@ -67,7 +67,11 @@ func execute(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("GITHUB_TOKEN is required")
 	}
 
-	gh := github.NewClient(github.WithConfig(github.NewStaticTokenConfig(cfg.GithubToken)))
+	gh, err := github.NewClient(github.WithConfig(github.NewStaticTokenConfig(cfg.GithubToken)))
+	if err != nil {
+		log.Error().Err(err).Msgf("initialse github Client: %v", err)
+		return err
+	}
 	return run(cfg, gh)
 }
 
@@ -123,7 +127,7 @@ func listDuneBotRepositories(ctx context.Context, cfg *dispatchConfig) ([]string
 	return repositories, nil
 }
 
-func run(cfg *dispatchConfig, gh github.GithubClient) error {
+func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 	// Create a new request
 
 	ctx := context.Background()

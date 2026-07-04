@@ -50,7 +50,10 @@ func (h *AppHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 
 	ctx, logger := AddEventActionToContext(ctx, nil, event.GetAction())
 
-	gh := github.NewClient(github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx))
+	gh, err := github.NewClient(github.WithTokenSource(oauth2cfg.TokenSourceFrom(ctx)), github.WithContext(ctx))
+	if err != nil {
+		logger.Error().Err(err).Msgf("Failed to initialise github Client %s", oauth2cfg.User)
+	}
 
 	installs, _, err := gh.Client.Apps.ListUserInstallations(ctx, nil)
 	if err != nil {

@@ -246,7 +246,11 @@ func TestMergeInclude(t *testing.T) {
 
 func makeTestClient() *github.Client {
 	rp := github_testdata.NewResponsePlayer("testdata")
-	return github.NewClient(github.WithHttpClient(&http.Client{Transport: rp})).Client
+	cli, err := github.NewClient(github.WithHttpClient(&http.Client{Transport: rp}))
+	if err != nil {
+		panic(err)
+	}
+	return cli.Client
 }
 
 func TestLoadLocalConfig(t *testing.T) {

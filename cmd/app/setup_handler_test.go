@@ -275,7 +275,7 @@ type MockGithub struct {
 	folder string
 }
 
-func (m *MockGithub) NewClient(opts ...github.Option) github.GithubClient {
+func (m *MockGithub) NewClient(opts ...github.Option) (*github.GithubClient, error) {
 	return github.NewClient(
 		github.WithContext(context.Background()),
 		github.WithGithubClient(makeGithubTestClient(m.folder)),
