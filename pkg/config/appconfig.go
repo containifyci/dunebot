@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
 	oauth2github "golang.org/x/oauth2/github"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/kelseyhightower/envconfig"
 
