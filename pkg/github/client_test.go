@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-github/v88/github"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -103,11 +104,12 @@ func TestGetMergeMethod(t *testing.T) {
 func TestWaitForPRChecksToPass(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithContext(context.Background()),
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	tests := []struct {
 		name     string
@@ -141,11 +143,13 @@ func TestWaitForPRChecksToPass(t *testing.T) {
 func TestIsOutOfDate(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithContext(context.Background()),
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
+
 	tests := []struct {
 		name      string
 		pr        *PullRequest
@@ -166,11 +170,12 @@ func TestIsOutOfDate(t *testing.T) {
 func TestAddRebaseComment(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithContext(context.Background()),
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	tests := []struct {
 		name string
@@ -195,11 +200,12 @@ func TestAddRebaseComment(t *testing.T) {
 func TestAddComment(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithContext(context.Background()),
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	repo := &Repository{
 		Owner: &User{Login: String("test-owner")},
@@ -229,10 +235,11 @@ func TestAddComment(t *testing.T) {
 func TestWaitForRebase(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	tests := []struct {
 		number   int
@@ -271,10 +278,11 @@ func TestWaitForRebase(t *testing.T) {
 func TestMergePullRequest(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	tests := []struct {
 		name   string
@@ -301,10 +309,11 @@ func TestMergePullRequest(t *testing.T) {
 func TestGetStatuses(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(
+	client, err := NewClient(
 		WithGithubClient(makeTestClient()),
 		WithConfig(NewRepositoryConfig("test-owner", "test-repo")),
 	)
+	require.NoError(t, err)
 
 	tests := []struct {
 		name  string
@@ -452,7 +461,11 @@ func newRetry(pauseTime *time.Duration, maxWaitTime *time.Duration, maxAttempts 
 
 func makeTestClient() *Client {
 	rp := testdata.NewResponsePlayer("testdata")
-	return Newclient(&http.Client{Transport: rp})
+	cli, err := Newclient(github.WithHTTPClient(&http.Client{Transport: rp}))
+	if err != nil {
+		panic(err)
+	}
+	return cli
 }
 
 type logSink struct{ logs []string }

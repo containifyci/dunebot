@@ -8,6 +8,7 @@ import (
 	"github.com/containifyci/dunebot/pkg/logger"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestPullRequestClient(t *testing.T) {
@@ -15,12 +16,13 @@ func TestPullRequestClient(t *testing.T) {
 
 	var s = new(strings.Builder)
 	logger := logger.ZeroLogger(zerolog.New(s))
-	cli := NewClient(WithLogger(logger))
+	cli, err := NewClient(WithLogger(logger))
+	require.NoError(t, err)
 
 	timestamp, err := time.Parse(time.RFC3339, "2021-01-01T00:00:00Z")
 	assert.NoError(t, err)
 
-	pr := NewPullRequestClient(&cli, &PullRequest{
+	pr := NewPullRequestClient(cli, &PullRequest{
 		User: &User{
 			Login: String("test_login"),
 		},
@@ -51,8 +53,10 @@ func TestPullRequestClient(t *testing.T) {
 func TestPullRequestClientComments(t *testing.T) {
 	t.Parallel()
 
-	cli := NewClient(WithConfig(NewRepositoryConfig("org_test", "test_repo")), WithGithubClient(makeTestClient()))
-	pr := NewPullRequestClient(&cli, &PullRequest{
+	cli, err := NewClient(WithConfig(NewRepositoryConfig("org_test", "test_repo")), WithGithubClient(makeTestClient()))
+	require.NoError(t, err)
+
+	pr := NewPullRequestClient(cli, &PullRequest{
 		Number: Int(1),
 	})
 	comments, err := pr.Comments()
@@ -64,8 +68,10 @@ func TestPullRequestClientComments(t *testing.T) {
 func TestPullRequestClientChecks(t *testing.T) {
 	t.Parallel()
 
-	cli := NewClient(WithConfig(NewRepositoryConfig("org_test", "test_repo")), WithGithubClient(makeTestClient()))
-	pr := NewPullRequestClient(&cli, &PullRequest{
+	cli, err := NewClient(WithConfig(NewRepositoryConfig("org_test", "test_repo")), WithGithubClient(makeTestClient()))
+	require.NoError(t, err)
+
+	pr := NewPullRequestClient(cli, &PullRequest{
 		Number: Int(1),
 		Head: &PullRequestBranch{
 			SHA: String("test_sha"),

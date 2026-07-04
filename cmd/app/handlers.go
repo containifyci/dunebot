@@ -31,7 +31,12 @@ func DuneBotRepositoriesHandler(opts HandlerOptions) func(w http.ResponseWriter,
 		token := strings.Split(auth, " ")[1]
 
 		options := append([]github.Option{github.WithConfig(github.NewStaticTokenConfig(token))}, opts.clientOpts...)
-		ghu := github.NewClient(options...)
+		ghu, err := github.NewClient(options...)
+		if err != nil {
+			log.Error().Err(err).Msgf("Error initialise github Client %v\n", err)
+			http.Error(w, "Error initialise github Client", http.StatusUnauthorized)
+			return
+		}
 
 		user, _, err := ghu.Client.Users.Get(r.Context(), "")
 		if err != nil {

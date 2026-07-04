@@ -212,8 +212,11 @@ func oauth2DeviceFlow(cfg config.ConfigTransformer, errorHandler errorReporter) 
 			return
 		}
 
-		cli := ghc.NewClient(github.WithConfig(github.NewStaticTokenConfig(token.AccessToken)))
-
+		cli, err := ghc.NewClient(github.WithConfig(github.NewStaticTokenConfig(token.AccessToken)))
+		if err != nil {
+			errorHandler.Errorf(err, "Error initialise github Client: %v\n", err)
+			return
+		}
 		user, _, err := cli.Client.Users.Get(ctx, "")
 		if err != nil {
 			errorHandler.Errorf(err, "Error getting user from token source: %v\n", err)
@@ -264,10 +267,10 @@ type Page struct {
 }
 
 func FindInstallation(ctx context.Context, gh *github.Client, user string) (*github.Installation, error) {
-	installion, _, err := gh.Apps.FindOrganizationInstallation(ctx, "containifyci")
+	installion, _, err := gh.Apps.GetOrganizationInstallation(ctx, "containifyci")
 	if err != nil {
 		log.Info().Err(err).Msgf("Failed to retrieve organisation installation try with user installation instead: %v\n", err)
-		installion, _, err = gh.Apps.FindUserInstallation(ctx, user)
+		installion, _, err = gh.Apps.GetUserInstallation(ctx, user)
 	}
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to retrieve user installation: %v\n", err)

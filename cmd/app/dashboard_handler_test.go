@@ -233,7 +233,11 @@ func newConfigForTest(tkCfg oauth2cfg.Config) *config.Config {
 
 func makeGithubTestClient(folder string) *github.Client {
 	rp := testdata.NewResponsePlayer(folder)
-	return github.Newclient(&http.Client{Transport: rp})
+	cli, err := github.Newclient(github.WithhttpClient(&http.Client{Transport: rp}))
+	if err != nil {
+		panic(err)
+	}
+	return cli
 }
 
 func newMockSessionManaer() *scs.Manager {
@@ -352,7 +356,7 @@ func getFreePort() int {
 	if err != nil {
 		panic(err)
 	}
-	defer func () {
+	defer func() {
 		err := l.Close()
 		if err != nil {
 			panic(err)
