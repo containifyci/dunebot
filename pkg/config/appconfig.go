@@ -145,7 +145,7 @@ func ReadConfig(path string) (*Config, error) {
 		return nil, errors.Wrapf(err, "failed reading server config file: %s", path)
 	}
 
-	if err := yaml.UnmarshalStrict(bytes, &c); err != nil {
+	if err := yaml.Unmarshal(bytes, &c); err != nil {
 		return nil, errors.Wrap(err, "failed parsing configuration file")
 	}
 

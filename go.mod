@@ -27,8 +27,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require gopkg.in/yaml.v2 v2.4.0
-
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
@@ -61,4 +59,5 @@ require (
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260630182238-925bb5da69e7 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260630182238-925bb5da69e7 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
