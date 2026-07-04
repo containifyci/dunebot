@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/rs/zerolog/log"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func merge(cnt ...[]byte) ([]byte, error) {
@@ -42,8 +42,8 @@ func mergeDeep(dest, src *interface{}) {
 	case nil:
 		// If destination is nil, copy from source
 		*dest = *src
-	case map[interface{}]interface{}:
-		srcMap, srcMapOk := (*src).(map[interface{}]interface{})
+	case map[string]interface{}:
+		srcMap, srcMapOk := (*src).(map[string]interface{})
 		if srcMapOk {
 			// Both values are maps, recursively merge
 			for key, srcValue := range srcMap {
