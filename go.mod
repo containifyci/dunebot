@@ -4,6 +4,7 @@ go 1.26.0
 
 require (
 	github.com/alexedwards/scs v1.4.1
+	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/containifyci/go-self-update v0.2.7
 	github.com/containifyci/oauth2-storage v0.2.2
 	github.com/gofri/go-github-ratelimit v1.1.1
@@ -28,7 +29,6 @@ require (
 )
 
 require (
-	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

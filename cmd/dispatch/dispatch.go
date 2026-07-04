@@ -7,8 +7,11 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 
+	"github.com/bradleyfalzon/ghinstallation/v2"
+	gogithub "github.com/google/go-github/v88/github"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -19,8 +22,9 @@ import (
 )
 
 type dispatchCmdArgs struct {
-	repo   string
-	dryRun bool
+	repo         string
+	dryRun       bool
+	installation int64
 }
 
 var dispatchArgs = &dispatchCmdArgs{}
@@ -38,6 +42,7 @@ func init() {
 
 	dispatchCmd.Flags().StringVar(&dispatchArgs.repo, "repo", "", "Only send repository dispatch event for this for this Github repository in the form of (owner/repo for example containifyci/ad-service).")
 	dispatchCmd.Flags().BoolVar(&dispatchArgs.dryRun, "dry", false, "If true no repository dispatch event is sent only log the event to stdout.")
+	dispatchCmd.Flags().Int64Var(&dispatchArgs.installation, "installation", 0, "Only process this specific installation ID (0 = all installations). Only used in GitHub App mode.")
 }
 
 type Payload struct {
@@ -62,9 +67,8 @@ func execute(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if cfg.GithubToken == "" {
-		log.Error().Msg("GITHUB_TOKEN is required")
-		return fmt.Errorf("GITHUB_TOKEN is required")
+	if cfg.IsAppMode() {
+		return runAppMode(cfg)
 	}
 
 	gh, err := github.NewClient(github.WithConfig(github.NewStaticTokenConfig(cfg.GithubToken)))
@@ -128,9 +132,8 @@ func listDuneBotRepositories(ctx context.Context, cfg *dispatchConfig) ([]string
 }
 
 func run(cfg *dispatchConfig, gh *github.GithubClient) error {
-	// Create a new request
-
 	ctx := context.Background()
+
 	var repos []string
 	if dispatchArgs.repo != "" {
 		repos = []string{dispatchArgs.repo}
@@ -146,19 +149,96 @@ func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 			repos = append(repos, *repo.FullName)
 		}
 	} else {
-		repositories, err := listDuneBotRepositories(ctx, cfg)
+		var err error
+		repos, err = listDuneBotRepositories(ctx, cfg)
 		if err != nil {
 			log.Error().Err(err).Msgf("fetching repositories: %v", err)
 			return err
 		}
-		repos = repositories
 	}
 
+	return dispatchForRepos(ctx, gh, repos)
+}
+
+// runAppMode discovers repositories via GitHub App installations and dispatches events.
+func runAppMode(cfg *dispatchConfig) error {
+	ctx := context.Background()
+
+	appClient, err := newAppClient(cfg)
+	if err != nil {
+		log.Error().Err(err).Msg("creating GitHub App client")
+		return err
+	}
+
+	installations, err := listAllInstallations(ctx, appClient)
+	if err != nil {
+		log.Error().Err(err).Msg("listing installations")
+		return err
+	}
+	log.Info().Msgf("Found %d installation(s)", len(installations))
+
+	for _, install := range installations {
+		if dispatchArgs.installation != 0 && install.GetID() != dispatchArgs.installation {
+			log.Debug().Msgf("Skipping installation %d (filter: %d)", install.GetID(), dispatchArgs.installation)
+			continue
+		}
+
+		log.Info().Msgf("Processing installation %d (%s)", install.GetID(), install.GetAccount().GetLogin())
+
+		installClient, err := newInstallationClient(cfg, install.GetID())
+		if err != nil {
+			log.Error().Err(err).Msgf("Failed to create installation client for installation %d", install.GetID())
+			continue
+		}
+
+		ghClient, err := github.NewClient(github.WithGithubClient(installClient))
+		if err != nil {
+			log.Error().Err(err).Msgf("Failed to create GithubClient for installation %d", install.GetID())
+			continue
+		}
+
+		installRepos, err := listInstallationRepositories(ctx, installClient)
+		if err != nil {
+			log.Error().Err(err).Msgf("Failed to list repositories for installation %d", install.GetID())
+			continue
+		}
+
+		// Filter by --repo flag if set
+		if dispatchArgs.repo != "" {
+			found := false
+			for _, r := range installRepos {
+				if r == dispatchArgs.repo {
+					installRepos = []string{r}
+					found = true
+					break
+				}
+			}
+			if !found {
+				log.Debug().Msgf("Repository %s not found in installation %d", dispatchArgs.repo, install.GetID())
+				continue
+			}
+		}
+
+		err = dispatchForRepos(ctx, ghClient, installRepos)
+		if err != nil {
+			log.Error().Err(err).Msgf("Error dispatching for installation %d", install.GetID())
+		}
+	}
+	return nil
+}
+
+// dispatchForRepos iterates over repos, fetches open PRs, and dispatches events.
+// Errors for individual repos/PRs are logged but do not stop processing of others.
+func dispatchForRepos(ctx context.Context, gh *github.GithubClient, repos []string) error {
+	var firstErr error
 	prCount := 0
-	// Iterate over all repositories and fetch open pull requests
 	for _, repo := range repos {
-		log.Debug().Msgf("Repository: %s\n", repo)
+		log.Debug().Msgf("Repository: %s", repo)
 		sp := strings.Split(repo, "/")
+		if len(sp) != 2 {
+			log.Error().Msgf("invalid repository format: %s, expected owner/repo", repo)
+			continue
+		}
 		owner := sp[0]
 		name := sp[1]
 
@@ -174,12 +254,15 @@ func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 		for {
 			pullRequests, resp, err := gh.Client.PullRequests.List(ctx, owner, name, prOpts)
 			if err != nil {
-				log.Error().Err(err).Msgf("fetching pull requests for repository %s: %v", repo, err)
-				return err
+				log.Error().Err(err).Msgf("fetching pull requests for repository %s", repo)
+				if firstErr == nil {
+					firstErr = err
+				}
+				break
 			}
 
 			for _, pr := range pullRequests {
-				log.Debug().Msgf("\tOpen PR: #%d %s\n", pr.GetNumber(), pr.GetTitle())
+				log.Debug().Msgf("\tOpen PR: #%d %s", pr.GetNumber(), pr.GetTitle())
 				//Only setting the required Pull Request fields like Number, State, User.Login, Head.Ref because repository_dispacth event has a strict payload size limit
 				//https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
 				miniPR := &github.PullRequest{
@@ -205,7 +288,10 @@ func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 				b, err := json.Marshal(payLoad)
 				if err != nil {
 					log.Error().Err(err).Msgf("marshaling event: %v", err)
-					return err
+					if firstErr == nil {
+						firstErr = err
+					}
+					continue
 				}
 				msg := json.RawMessage(b)
 				_, _, err = gh.Client.Repositories.Dispatch(ctx, owner, name, github.DispatchRequestOptions{
@@ -213,12 +299,15 @@ func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 					ClientPayload: &msg,
 				})
 				if err != nil {
-					log.Error().Err(err).Msgf("dispatching event for PR #%d: %v", pr.GetNumber(), err)
-					return err
+					log.Error().Err(err).Msgf("dispatching event for PR #%d", pr.GetNumber())
+					if firstErr == nil {
+						firstErr = err
+					}
+					continue
 				}
 				prCount++
 				backoff.New(prCount).Wait()
-				log.Info().Msgf("Dispatched event sent %s\n", string(msg))
+				log.Info().Msgf("Dispatched event sent %s", string(msg))
 			}
 
 			if resp.NextPage == 0 {
@@ -227,5 +316,88 @@ func run(cfg *dispatchConfig, gh *github.GithubClient) error {
 			prOpts.Page = resp.NextPage
 		}
 	}
-	return nil
+	return firstErr
+}
+
+// newAppClient creates a GitHub client authenticated as the App (JWT-based).
+func newAppClient(cfg *dispatchConfig) (*gogithub.Client, error) {
+	pk, err := cfg.GetPrivateKey()
+	if err != nil {
+		return nil, fmt.Errorf("getting private key: %w", err)
+	}
+
+	tr := http.DefaultTransport
+	itr, err := ghinstallation.NewAppsTransport(tr, cfg.Github.App.IntegrationID, []byte(pk))
+	if err != nil {
+		return nil, fmt.Errorf("creating app transport: %w", err)
+	}
+
+	client, err := gogithub.NewClient(gogithub.WithHTTPClient(&http.Client{Transport: itr}))
+	if err != nil {
+		return nil, fmt.Errorf("creating github app client: %w", err)
+	}
+	return client, nil
+}
+
+// newInstallationClient creates a GitHub client authenticated for a specific installation.
+func newInstallationClient(cfg *dispatchConfig, installationID int64) (*gogithub.Client, error) {
+	pk, err := cfg.GetPrivateKey()
+	if err != nil {
+		return nil, fmt.Errorf("getting private key: %w", err)
+	}
+
+	tr := http.DefaultTransport
+	itr, err := ghinstallation.New(tr, cfg.Github.App.IntegrationID, installationID, []byte(pk))
+	if err != nil {
+		return nil, fmt.Errorf("creating installation transport: %w", err)
+	}
+
+	client, err := gogithub.NewClient(gogithub.WithHTTPClient(&http.Client{Transport: itr}))
+	if err != nil {
+		return nil, fmt.Errorf("creating github installation client: %w", err)
+	}
+	return client, nil
+}
+
+// listAllInstallations lists all installations of the GitHub App.
+func listAllInstallations(ctx context.Context, appClient *gogithub.Client) ([]*gogithub.Installation, error) {
+	var allInstallations []*gogithub.Installation
+	opts := &gogithub.ListOptions{PerPage: 100}
+	for {
+		installations, resp, err := appClient.Apps.ListInstallations(ctx, opts)
+		if err != nil {
+			return nil, fmt.Errorf("listing app installations: %w", err)
+		}
+		allInstallations = append(allInstallations, installations...)
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
+	}
+	return allInstallations, nil
+}
+
+// listInstallationRepositories lists all repositories accessible to a specific installation.
+func listInstallationRepositories(ctx context.Context, installClient *gogithub.Client) ([]string, error) {
+	var allRepos []string
+	opts := &gogithub.ListOptions{PerPage: 100}
+	for {
+		repos, resp, err := installClient.Apps.ListRepos(ctx, opts)
+		if err != nil {
+			return nil, fmt.Errorf("listing installation repositories: %w", err)
+		}
+		for _, repo := range repos.Repositories {
+			if repo.Archived != nil && *repo.Archived {
+				log.Debug().Msgf("Skipping archived repo %s", repo.GetFullName())
+				continue
+			}
+			allRepos = append(allRepos, repo.GetFullName())
+		}
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
+	}
+	sort.Strings(allRepos)
+	return allRepos, nil
 }

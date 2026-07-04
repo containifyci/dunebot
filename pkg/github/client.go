@@ -167,6 +167,9 @@ func NewClient(opts ...Option) (*GithubClient, error) {
 
 		baseURL := fmt.Sprintf("%s://%s", gc.cfg.GitHubAPIScheme, gc.cfg.GitHubAPIHost)
 		ghCli, err := github.NewClient(github.WithHTTPClient(rateLimiter), github.WithURLs(&baseURL, nil))
+		if err != nil {
+			return nil, fmt.Errorf("creating github client: %w", err)
+		}
 		gc.Client = ghCli
 	}
 	return &gc, nil

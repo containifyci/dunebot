@@ -3,7 +3,7 @@ providers:
     kind: google_secretmanager
     maps:
     - id: shared
-      path: projects/xxxxxxxx
+      path: projects/gke-1-368016
       keys:
         DUNEBOT_GITHUB_APP_INTEGRATION_ID: DUNEBOT_GITHUB_APP_INTEGRATION_ID
         DUNEBOT_GITHUB_APP_PRIVATE_KEY: DUNEBOT_GITHUB_APP_PRIVATE_KEY

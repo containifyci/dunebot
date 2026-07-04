@@ -16,7 +16,7 @@ func TestPullRequestClient(t *testing.T) {
 
 	var s = new(strings.Builder)
 	logger := logger.ZeroLogger(zerolog.New(s))
-	cli, err := NewClient(WithLogger(logger))
+	cli, err := NewClient(WithConfig(NewConfig()), WithLogger(logger))
 	require.NoError(t, err)
 
 	timestamp, err := time.Parse(time.RFC3339, "2021-01-01T00:00:00Z")
