@@ -67,7 +67,6 @@ func NewResponseHandler(f ResponseHandlerFunc) *ResponseHandlerFuncWrapper {
 	return &ResponseHandlerFuncWrapper{f: f}
 }
 
-
 func (f *ResponseHandlerFuncWrapper) Response(req *http.Request) *http.Response {
 	f.Called = true
 	return f.f(req)
@@ -222,7 +221,7 @@ func (rp *ResponsePlayer) findMatchRule(url, query string) (int, *Rule) {
 			rule.Path == url {
 			return i, rule
 		}
-		if rule.Query == "" && rule.Path == url{
+		if rule.Query == "" && rule.Path == url {
 			return i, rule
 		}
 	}
