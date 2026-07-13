@@ -14,7 +14,7 @@ import (
 const (
 	//TODO make this configurable
 	WorkflowName = "PullRequestQueueWorkflow"
-	TaskQueue    = "hello-world"
+	TaskQueue    = "dunebot"
 )
 
 type (
