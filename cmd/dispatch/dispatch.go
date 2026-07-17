@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/bradleyfalzon/ghinstallation/v2"
-	gogithub "github.com/google/go-github/v88/github"
+	gogithub "github.com/google/go-github/v89/github"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

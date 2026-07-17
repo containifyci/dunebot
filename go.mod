@@ -9,7 +9,7 @@ require (
 	github.com/containifyci/oauth2-storage v0.2.2
 	github.com/gofri/go-github-ratelimit v1.1.1
 	github.com/golang-jwt/jwt/v5 v5.3.1
-	github.com/google/go-github/v88 v88.0.0
+	github.com/google/go-github/v89 v89.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/palantir/go-githubapp v0.46.0
@@ -33,7 +33,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/mock v1.6.0 // indirect
-	github.com/google/go-github/v89 v89.0.0 // indirect
+	github.com/google/go-github/v88 v88.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.3 // indirect
