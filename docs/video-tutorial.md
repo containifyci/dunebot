@@ -3,18 +3,25 @@
 A short video walkthrough demonstrating how to set up DuneBot for a private
 GitHub organization, end to end.
 
-> 🎬 **Video status:** _Recording planned — see the outline below._
-> Once published, the video will be embedded here and linked from the README.
+> 🎬 **Video status:** _A terminal walkthrough GIF is available below; a full
+> narrated video is planned — see the outline further down._
 > If you'd like to record it, the script/outline below covers every step.
 
-<!-- Replace the placeholder below with the embedded video once it is published. -->
-<!-- Example: <a href="https://youtu.be/VIDEO_ID"><img src="docs/assets/dunebot-tutorial-thumbnail.png" width="480" alt="DuneBot installation tutorial"/></a> -->
+## Terminal Walkthrough (GIF)
 
-> **🎬 The video has not been recorded yet.** This page provides the outline,
-> checklist and instructions so the tutorial can be produced against it. Until
-> then, follow the written [Installation Guide](./installation-guide.md) which
-> covers the same steps. To contribute a recording, see
-> [How to Record This Yourself](#how-to-record-this-yourself) below.
+A screen recording of the terminal portions of the installation — cloning the
+repo, preparing `.env`, deploying with Docker Compose, connecting a code-owner
+account, adding `dunebot.yaml`, and verifying with a test PR:
+
+![DuneBot installation walkthrough](assets/install-walkthrough.gif)
+
+> The recording was captured with [asciinema](https://asciinema.org) and
+> converted to a GIF with `ffmpeg`/`gifsicle`. The source cast file
+> (`assets/install.cast`) and the rendering script (`assets/cast2gif.py`) are
+> included so the GIF can be regenerated or re-rendered at a different size.
+
+<!-- Replace the placeholder below with the embedded video once it is published. -->
+<!-- Example: <a href="https://youtu.be/VIDEO_ID"><img src="assets/install-walkthrough.png" width="480" alt="DuneBot installation tutorial"/></a> -->
 
 ---
 

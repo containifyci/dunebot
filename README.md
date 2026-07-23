@@ -9,6 +9,8 @@ New to DuneBot? Follow the step-by-step **[Installation Guide](docs/installation
 to set it up for your private GitHub organization, or watch the
 **[Video Tutorial](docs/video-tutorial.md)** for a full walkthrough.
 
+![DuneBot installation walkthrough](docs/assets/install-walkthrough.gif)
+
 A minimal repository configuration (`.github/dunebot.yaml`) looks like this — see
 [`example/dunebot.yml`](example/dunebot.yml) for all available options:
 

@@ -2,7 +2,9 @@
 
 This guide walks you through installing and configuring **DuneBot** for a private
 GitHub organization from scratch. It is the written companion to the
-[Video Tutorial](./video-tutorial.md).
+[Video Tutorial](./video-tutorial.md), which includes a terminal walkthrough GIF:
+
+![DuneBot installation walkthrough](assets/install-walkthrough.gif)
 
 DuneBot is a self-hosted GitHub App that automatically approves and merges Pull
 Requests (the primary use case is Dependabot PRs). To run it you need to:
