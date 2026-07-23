@@ -26,3 +26,4 @@ coverage.txt
 build
 data.json
 *.pem
+.local/

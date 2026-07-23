@@ -8,9 +8,13 @@ GitHub organization, end to end.
 > If you'd like to record it, the script/outline below covers every step.
 
 <!-- Replace the placeholder below with the embedded video once it is published. -->
-<!-- Example: <a href="https://youtu.be/XXXXXXXXXXX"><img src="docs/assets/dunebot-tutorial-thumbnail.png" width="480" alt="DuneBot installation tutorial"/></a> -->
+<!-- Example: <a href="https://youtu.be/VIDEO_ID"><img src="docs/assets/dunebot-tutorial-thumbnail.png" width="480" alt="DuneBot installation tutorial"/></a> -->
 
-[![DuneBot Installation Tutorial — placeholder](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](#video-placeholder)
+> **🎬 The video has not been recorded yet.** This page provides the outline,
+> checklist and instructions so the tutorial can be produced against it. Until
+> then, follow the written [Installation Guide](./installation-guide.md) which
+> covers the same steps. To contribute a recording, see
+> [How to Record This Yourself](#how-to-record-this-yourself) below.
 
 ---
 
