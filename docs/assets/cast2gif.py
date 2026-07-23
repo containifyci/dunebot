@@ -405,9 +405,9 @@ def main():
     font_italic = ImageFont.truetype(FONT_ITALIC, font_size)
 
     # measure char size
-    bbox = font.getbbox("M")
-    char_w = bbox[2] - bbox[0]
-    char_h = int(font.getmetrics()[1] + 2)
+    ascent, descent = font.getmetrics()
+    char_w = int(round(font.getlength("M")))
+    char_h = ascent + descent + 2  # full line height + small padding
 
     with open(cast_path) as f:
         header = json.loads(f.readline())
