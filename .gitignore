@@ -26,3 +26,5 @@ coverage.txt
 build
 data.json
 *.pem
+.local/
+docs/assets/__pycache__/
