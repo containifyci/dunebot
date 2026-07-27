@@ -3,6 +3,29 @@
 This implements a Github Application that can approve and merge Pull Requests.
 The major use case is to automatically approve and merge DependeBot Pull Requests.
 
+## Installation
+
+New to DuneBot? Watch the **[Video Tutorial](docs/video-tutorial.md)**
+for a full installation walkthrough.
+
+![DuneBot installation walkthrough](docs/assets/install-walkthrough.gif)
+
+A minimal repository configuration (`.github/dunebot.yaml`) looks like this — see
+[`example/dunebot.yml`](example/dunebot.yml) for all available options:
+
+```yaml
+version: 1.0.0
+
+approve:
+  approver: "your-bot-username"
+  include:
+    - authors:
+      - "dependabot[bot]"
+
+merge:
+  method: squash
+```
+
 ## Development
 
 ### Prerequisites
