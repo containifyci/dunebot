@@ -399,6 +399,8 @@ def main():
     min_ms = int(os.environ.get("MIN_MS", "80"))
     # cap ms for any single frame (idle pauses)
     max_ms = int(os.environ.get("MAX_MS", "600"))
+    # playback speed multiplier (1.25 = 25% faster → durations ÷ 1.25)
+    speed = float(os.environ.get("SPEED", "1"))
 
     font = ImageFont.truetype(FONT_REGULAR, font_size)
     font_bold = ImageFont.truetype(FONT_BOLD, font_size)
@@ -453,6 +455,9 @@ def main():
         else:
             dur = 400
         dur = max(min_ms, min(max_ms, int(dur)))
+        # apply playback speed after clamping so capped idle frames
+        # are shortened too (1.25 → 600 ms cap becomes 480 ms)
+        dur = max(20, int(dur / speed))
         frames.append(render_frame(term, font, font_bold, font_italic,
                                    char_w, char_h, 8, scale))
         durations.append(dur)
