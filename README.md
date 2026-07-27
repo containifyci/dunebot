@@ -5,9 +5,8 @@ The major use case is to automatically approve and merge DependeBot Pull Request
 
 ## Installation
 
-New to DuneBot? Follow the step-by-step **[Installation Guide](docs/installation-guide.md)**
-to set it up for your private GitHub organization, or watch the
-**[Video Tutorial](docs/video-tutorial.md)** for a full walkthrough.
+New to DuneBot? Watch the **[Video Tutorial](docs/video-tutorial.md)**
+for a full installation walkthrough.
 
 ![DuneBot installation walkthrough](docs/assets/install-walkthrough.gif)
 

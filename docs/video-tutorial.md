@@ -15,19 +15,13 @@ account, adding `dunebot.yaml`, and verifying with a test PR:
 
 ![DuneBot installation walkthrough](assets/install-walkthrough.gif)
 
-> The recording was captured with [asciinema](https://asciinema.org) and
-> converted to a GIF with `ffmpeg`/`gifsicle`. The source cast file
-> (`assets/install.cast`) and the rendering script (`assets/cast2gif.py`) are
-> included so the GIF can be regenerated or re-rendered at a different size.
-
 <!-- Replace the placeholder below with the embedded video once it is published. -->
-<!-- Example: <a href="https://youtu.be/VIDEO_ID"><img src="assets/install-walkthrough.png" width="480" alt="DuneBot installation tutorial"/></a> -->
+<!-- Example: <a href="https://youtu.be/VIDEO_ID"><img src="YOUR_THUMBNAIL.png" width="480" alt="DuneBot installation tutorial"/></a> -->
 
 ---
 
 ## Video Outline
 
-The video follows the [Installation Guide](./installation-guide.md) step by step.
 Estimated length: **~8 minutes**.
 
 | #  | Section                              | Duration | What is shown                                                                 |
@@ -41,7 +35,7 @@ Estimated length: **~8 minutes**.
 | 7  | Connect a code-owner account         | 1:00     | Opening `/app/github/setup?installation_id=...`, completing the OAuth device flow with a CODEOWNER account. |
 | 8  | Add `dunebot.yaml` to a repo         | 0:45     | Adding `.github/dunebot.yaml`, committing, showing the Dependabot-style example. |
 | 9  | Verify with a test PR                | 0:45     | Opening a Dependabot PR, watching logs, seeing it get approved & merged.      |
-| 10 | Outro & links                        | 0:20     | Link to the Installation Guide, `example/dunebot.yml`, Privacy Policy, repo.  |
+| 10 | Outro & links                        | 0:20     | Link to `example/dunebot.yml`, Privacy Policy, repo.                          |
 
 ---
 
@@ -51,8 +45,8 @@ Estimated length: **~8 minutes**.
 - [ ] Test org + test repo prepared so nothing sensitive is shown
 - [ ] `.env` values redacted / replaced with placeholders on screen
 - [ ] Captions / transcript for accessibility
-- [ ] Upload to YouTube (unlisted until reviewed) and paste the link above
-- [ ] Replace the placeholder thumbnail with a real one
+- [ ] Add a thumbnail image and upload to YouTube (unlisted until reviewed)
+- [ ] Paste the video link above
 - [ ] Add the video link to the README's tutorial section
 
 ---
@@ -61,9 +55,8 @@ Estimated length: **~8 minutes**.
 
 If you want to produce the video for your team or the community:
 
-1. Follow the [Installation Guide](./installation-guide.md) once on a throwaway
-   org so the flow is fresh and you have all the values ready (use placeholders
-   on camera).
+1. Set up DuneBot once on a throwaway org so the flow is fresh and you have
+   all the values ready (use placeholders on camera).
 2. Record each section from the outline above in short takes — they can be
    stitched together in any editor.
 3. For the terminal sections, use a tool like
