@@ -21,7 +21,7 @@ func TestValidationLabels(t *testing.T) {
 		{
 			name: "Validation disabled (no configured labels)",
 			labels: []*github.Label{
-				{Name: strPtr("bug")},
+				{Name: "bug"},
 			},
 			expectedEnabled: false,
 			expectedValid:   false,
@@ -29,7 +29,7 @@ func TestValidationLabels(t *testing.T) {
 		{
 			name: "Labels do not match",
 			labels: []*github.Label{
-				{Name: strPtr("enhancement")},
+				{Name: "enhancement"},
 			},
 			clabels: config.StringArray{
 				"bug",
@@ -41,7 +41,7 @@ func TestValidationLabels(t *testing.T) {
 		{
 			name: "Labels do not match branch",
 			labels: []*github.Label{
-				{Name: strPtr("enhancement")},
+				{Name: "enhancement"},
 			},
 			clabels: config.StringArray{
 				"bug",
@@ -54,8 +54,8 @@ func TestValidationLabels(t *testing.T) {
 		{
 			name: "Labels match",
 			labels: []*github.Label{
-				{Name: strPtr("bug")},
-				{Name: strPtr("enhancement")},
+				{Name: "bug"},
+				{Name: "enhancement"},
 			},
 			clabels: config.StringArray{
 				"bug",
