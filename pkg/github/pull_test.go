@@ -27,7 +27,7 @@ func TestPullRequestClient(t *testing.T) {
 			Login: String("test_login"),
 		},
 		Labels: []*Label{
-			{Name: String("test_label")},
+			{Name: "test_label"},
 		},
 		Base: &PullRequestBranch{
 			Ref: String("test_base_ref"),
@@ -41,7 +41,7 @@ func TestPullRequestClient(t *testing.T) {
 	})
 	assert.Equal(t, "test_base_ref", *pr.Base().Ref)
 	assert.Equal(t, "test_head_ref", *pr.Head().Ref)
-	assert.Equal(t, "test_label", *pr.Labels()[0].Name)
+	assert.Equal(t, "test_label", pr.Labels()[0].Name)
 	assert.Equal(t, "test_login", *pr.Owner().Login)
 	assert.Equal(t, "2021-01-01 00:00:00 +0000 UTC", pr.CreatedAt().UTC().String())
 
