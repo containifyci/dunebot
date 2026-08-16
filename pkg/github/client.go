@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v89/github"
+	"github.com/google/go-github/v90/github"
 	"github.com/rs/zerolog/log"
 
 	"golang.org/x/oauth2"
@@ -45,7 +45,7 @@ type RepositoryListByAuthenticatedUserOptions = github.RepositoryListByAuthentic
 type PullRequest = github.PullRequest
 type PullRequestListOptions = github.PullRequestListOptions
 type PullRequestBranch = github.PullRequestBranch
-type PullRequestReviewDismissalRequest = github.PullRequestReviewDismissalRequest
+type PullRequestDismissReviewRequest = github.PullRequestDismissReviewRequest
 type PullRequestReviewEvent = github.PullRequestReviewEvent
 type Repository = github.Repository
 type DispatchRequestOptions = github.DispatchRequestOptions
