@@ -15,6 +15,8 @@ import (
 	"github.com/containifyci/dunebot/oauth2"
 	"github.com/containifyci/dunebot/pkg/config"
 	"github.com/containifyci/dunebot/pkg/github"
+	"github.com/containifyci/oauth2-storage/pkg/proto"
+	"github.com/containifyci/oauth2-storage/pkg/service"
 	"github.com/containifyci/oauth2-storage/pkg/storage"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
@@ -39,7 +41,7 @@ func TestRegisterSetup(t *testing.T) {
 
 	fmt.Println("Active goroutines:", runtime.NumGoroutine())
 
-	err := waitUntilGoroutines(runtime.NumGoroutine()-1, 30*time.Second)
+	err := waitUntilTokenStored(test.tokenService.service, "1", 30*time.Second)
 	assert.NoError(t, err)
 	fmt.Println("Active goroutines:", runtime.NumGoroutine())
 
@@ -51,6 +53,9 @@ func TestRegisterSetup(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, 1, len(data))
+	if data["1"] == nil {
+		t.Fatalf("token for installation 1 was not stored")
+	}
 	assert.Equal(t, "1", data["1"].InstallationId)
 	assert.Equal(t, 1, len(data["1"].Tokens))
 	assert.Equal(t, "mocktoken", data["1"].Tokens[0].AccessToken)
@@ -295,6 +300,22 @@ func waitUntilGoroutines(targetGoroutines int, timeout time.Duration) error {
 				return nil
 			}
 			time.Sleep(100 * time.Millisecond) // Polling interval
+		}
+	}
+}
+
+func waitUntilTokenStored(svc *service.TokenService, installationId string, timeout time.Duration) error {
+	timeoutCh := time.After(timeout)
+	req := &proto.Installation{InstallationId: installationId}
+	for {
+		select {
+		case <-timeoutCh:
+			return fmt.Errorf("timeout reached while waiting for token of installation %s", installationId)
+		default:
+			if _, err := svc.RetrieveInstallation(context.Background(), req); err == nil {
+				return nil
+			}
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 }
