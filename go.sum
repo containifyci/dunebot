@@ -64,8 +64,8 @@ github.com/nexus-rpc/nexus-proto-annotations v0.1.0 h1:2fELd+9sqUtNu6Fg//pw8YFsx
 github.com/nexus-rpc/nexus-proto-annotations v0.1.0/go.mod h1:n3UjF1bPCW8llR8tHvbxJ+27yPWrhpo8w/Yg1IOuY0Y=
 github.com/nexus-rpc/sdk-go v0.7.0 h1:38NrfY5rLnZAiMMs2ZfCKI/CSDzdfJG+27iAgfA8bUI=
 github.com/nexus-rpc/sdk-go v0.7.0/go.mod h1:FHdPfVQwRuJFZFTF0Y2GOAxCrbIBNrcPna9slkGKPYk=
-github.com/palantir/go-githubapp v0.47.1 h1:FbixB7R7hwbhiz9S26Y01mn41d/jdcfbAGrZIjOXxnA=
-github.com/palantir/go-githubapp v0.47.1/go.mod h1:sI9O5VqEJpTN5LqZDzNT1NEICj3tuNe55hpHM1+ozx0=
+github.com/palantir/go-githubapp v0.47.2 h1:mDYW9SNW5MT/1CiUbVJ4UIN9LQgE0ssEBSawi+l/Mwk=
+github.com/palantir/go-githubapp v0.47.2/go.mod h1:c9uBF1er4yVgjsCeBqcBKBuBc+A3XcO8JHJlh6GaQpg=
 github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
 github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
