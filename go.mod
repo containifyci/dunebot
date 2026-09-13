@@ -21,7 +21,7 @@ require (
 	go.temporal.io/api v1.63.5
 	go.temporal.io/sdk v1.48.0
 	golang.org/x/exp v0.0.0-20260611194520-c48552f49976
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
 	gopkg.in/yaml.v3 v3.0.1
