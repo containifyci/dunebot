@@ -266,11 +266,11 @@ func (cli GithubClient) AddRebaseComment(pr *github.PullRequest) TemplatedError 
 }
 
 func (cli GithubClient) AddComment(repo *github.Repository, prNumber int, body string) (*github.IssueComment, error) {
-	prComment := github.IssueComment{
-		Body: &body,
+	prComment := github.IssueCommentRequest{
+		Body: body,
 	}
 
-	comment, _, err := cli.Client.Issues.CreateComment(cli.ctx, repo.GetOwner().GetLogin(), repo.GetName(), prNumber, &prComment)
+	comment, _, err := cli.Client.Issues.CreateComment(cli.ctx, repo.GetOwner().GetLogin(), repo.GetName(), prNumber, prComment)
 	if err != nil {
 		cli.logger.Error("Error writing comment", "error", err)
 		return nil, NewAPIError(cli.ctx, err)
