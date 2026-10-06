@@ -23,10 +23,17 @@ import (
 
 type PullRequestEvent = github.PullRequestEvent
 
-var Int = github.Ptr[int]
-var Int64 = github.Ptr[int64]
-var String = github.Ptr[string]
-var Bool = github.Ptr[bool]
+// Int returns a pointer to the given int value.
+func Int(v int) *int { return new(v) }
+
+// Int64 returns a pointer to the given int64 value.
+func Int64(v int64) *int64 { return new(v) }
+
+// String returns a pointer to the given string value.
+func String(v string) *string { return new(v) }
+
+// Bool returns a pointer to the given bool value.
+func Bool(v bool) *bool { return new(v) }
 
 type Client = github.Client
 
