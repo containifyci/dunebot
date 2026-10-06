@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v90/github"
+	"github.com/google/go-github/v92/github"
 	"github.com/rs/zerolog/log"
 
 	"golang.org/x/oauth2"
@@ -23,10 +23,17 @@ import (
 
 type PullRequestEvent = github.PullRequestEvent
 
-var Int = github.Ptr[int]
-var Int64 = github.Ptr[int64]
-var String = github.Ptr[string]
-var Bool = github.Ptr[bool]
+// Int returns a pointer to the given int value.
+func Int(v int) *int { return new(v) }
+
+// Int64 returns a pointer to the given int64 value.
+func Int64(v int64) *int64 { return new(v) }
+
+// String returns a pointer to the given string value.
+func String(v string) *string { return new(v) }
+
+// Bool returns a pointer to the given bool value.
+func Bool(v bool) *bool { return new(v) }
 
 type Client = github.Client
 
@@ -266,11 +273,11 @@ func (cli GithubClient) AddRebaseComment(pr *github.PullRequest) TemplatedError 
 }
 
 func (cli GithubClient) AddComment(repo *github.Repository, prNumber int, body string) (*github.IssueComment, error) {
-	prComment := github.IssueComment{
-		Body: &body,
+	prComment := github.IssueCommentRequest{
+		Body: body,
 	}
 
-	comment, _, err := cli.Client.Issues.CreateComment(cli.ctx, repo.GetOwner().GetLogin(), repo.GetName(), prNumber, &prComment)
+	comment, _, err := cli.Client.Issues.CreateComment(cli.ctx, repo.GetOwner().GetLogin(), repo.GetName(), prNumber, prComment)
 	if err != nil {
 		cli.logger.Error("Error writing comment", "error", err)
 		return nil, NewAPIError(cli.ctx, err)
