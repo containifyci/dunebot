@@ -266,11 +266,32 @@ func (r *reviewer) PullRequestReview(ctx context.Context, pullRequestReview Pull
 				return nil
 			}
 
+			// Check if the PR has merge conflicts before attempting to merge.
+			// When a conflict is detected and a conflict_comment is configured for
+			// the matching merge branch, post that comment (e.g. "@dependabot
+			// recreate" for Dependabot PRs) instead of attempting the merge.
+			if pr.GetMergeableState() == "dirty" {
+				r.logger.Debug("PR has merge conflicts.", "mergeable_state", pr.GetMergeableState())
+				if comment, ok := validator.MergeConflictComment(pr.GetHead().GetRef()); ok {
+					r.logger.Debug("Posting configured conflict comment.", "comment", comment)
+					_, _ = gh.AddComment(repo, prNum, comment)
+					return nil
+				}
+			}
+
 			// If all checks are passed, merge the PR
 			r.logger.Debug("All checks passed. Proceeding to merge PR.")
 			_, tmplErr = gh.MergePullRequest(prNum, appCfg.GetMerge().Method, repo)
 			if tmplErr != nil {
 				r.logger.Warn("Error merging PR", "error", tmplErr)
+				// If the merge failed due to a conflict and a conflict_comment is
+				// configured, post it in addition to the standard error comment.
+				if pr.GetMergeableState() == "dirty" {
+					if comment, ok := validator.MergeConflictComment(pr.GetHead().GetRef()); ok {
+						r.logger.Debug("Posting configured conflict comment after merge error.", "comment", comment)
+						_, _ = gh.AddComment(repo, prNum, comment)
+					}
+				}
 				gh.AddCommentSilent(repo, prNum, tmplErr)
 				return tmplErr
 			}
