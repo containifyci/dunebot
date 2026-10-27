@@ -42,3 +42,10 @@ merge:
   # "method" defines the merge method. The available options are "merge",
   # "rebase", "squash", and "ff-only".
   method: squash
+  include:
+    branches:
+      dependabot:
+        prefix: "dependabot"
+        # When the PR has merge conflicts, post this comment instead of
+        # attempting the merge. For Dependabot PRs this triggers a recreate.
+        conflict_comment: "@dependabot recreate"

@@ -26,6 +26,32 @@ merge:
   method: squash
 ```
 
+## Conflict Comments
+
+When a pull request is not mergeable because of merge conflicts (GitHub
+reports `mergeable_state: dirty`), DuneBot can post a configurable comment
+instead of attempting the merge. This is useful for Dependabot PRs, where
+posting `@dependabot recreate` makes Dependabot recreate the PR and resolve
+the conflict automatically.
+
+Configure it per merge branch using the `conflict_comment` field in
+`.github/dunebot.yaml`:
+
+```yaml
+merge:
+  method: squash
+  include:
+    branches:
+      dependabot:
+        prefix: "dependabot"
+        conflict_comment: "@dependabot recreate"
+```
+
+When the branch head matches the configured `prefix` and the PR has merge
+conflicts, the `conflict_comment` text is posted as a PR comment. If no
+`conflict_comment` is configured for the matching branch, DuneBot falls back
+to its default merge-error behaviour.
+
 ## Development
 
 ### Prerequisites

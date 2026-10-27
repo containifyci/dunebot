@@ -6,7 +6,9 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"io"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/containifyci/dunebot/pkg/config"
@@ -297,6 +299,124 @@ func TestPullRequestReviewError(t *testing.T) {
 			assert.ErrorContains(t, err, "400  []")
 		})
 	}
+}
+
+func TestPullRequestReviewConflictComment(t *testing.T) {
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	assert.NoError(t, err)
+	privateKeyPEM := &pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
+	}
+	privateKeyPEMBytes := pem.EncodeToMemory(privateKeyPEM)
+	cfg := config.Config{
+		Github: config.GithubConfig{
+			App: struct {
+				IntegrationID int64  `yaml:"integration_id" json:"integrationId" envconfig:"INTEGRATION_ID"`
+				WebhookSecret string `yaml:"webhook_secret" json:"webhookSecret" envconfig:"WEBHOOK_SECRET"`
+				PrivateKey    string `yaml:"private_key" json:"privateKey" envconfig:"PRIVATE_KEY"`
+			}{
+				IntegrationID: 1,
+				PrivateKey:    string(privateKeyPEMBytes),
+			},
+		},
+		AppConfig: config.ApplicationConfig{
+			ReviewerConfig: config.ReviewerConfig{
+				Type: "direct",
+			},
+		},
+	}
+
+	rp := testdata.NewResponsePlayer("testdata_conflict")
+
+	// Capture the comment body posted to the PR so we can assert on it.
+	var commentBody string
+	commentHandler := testdata.NewResponseHandler(func(req *http.Request) *http.Response {
+		body, _ := io.ReadAll(req.Body)
+		commentBody = string(body)
+		rp.SetDynamicRule("/repos/test-owner/test-repo/issues/2/comments", "", testdata.NewResponseHandler(func(req *http.Request) *http.Response {
+			return &http.Response{
+				StatusCode: http.StatusCreated,
+				Body:       io.NopCloser(strings.NewReader(`{"id":1}`)),
+				Header:     make(http.Header),
+			}
+		}))
+		return &http.Response{
+			StatusCode: http.StatusCreated,
+			Body:       io.NopCloser(strings.NewReader(`{"id":1}`)),
+			Header:     make(http.Header),
+		}
+	})
+	rp.SetDynamicRule("/repos/test-owner/test-repo/issues/2/comments", "", commentHandler)
+
+	cc, err := githubapp.NewDefaultCachingClientCreator(
+		cfg.Github.ToGithubAppConfig(),
+		githubapp.WithClientUserAgent(cfg.AppConfig.UserAgent),
+		githubapp.WithClientTimeout(cfg.AppConfig.ClientTimeOutDuration()),
+		githubapp.WithTransport(rp),
+	)
+	assert.NoError(t, err)
+
+	ctx := context.Background()
+
+	event := github.PullRequestEvent{
+		Action: github.String("opened"),
+		Installation: &github.Installation{
+			ID: github.Int64(43975733),
+		},
+		PullRequest: &github.PullRequest{
+			Number: github.Int(2),
+			Head: &github.PullRequestBranch{
+				Ref: github.String("dependabot/go_modules/github.com/foo/bar-1.1.0"),
+			},
+			User: &github.User{
+				Login: github.String("dependabot[bot]"),
+			},
+		},
+		Repo: &github.Repository{
+			Owner: &github.User{
+				Login: github.String("test-owner"),
+			},
+			Name: github.String("test-repo"),
+		},
+	}
+
+	reviewer := NewReviewer(logger.NewZeroLogger(), nil, cc, cfg, WithTransport(rp))
+
+	err = reviewer.PullRequestReview(ctx, PullRequestReview{
+		PullRequest: event.GetPullRequest(),
+		Repository:  event.GetRepo(),
+		Event:       &event,
+		Config: &config.AppConfig{
+			Approve: &config.Approve{
+				Include: &config.Include{
+					Authors: config.StringArray{"dependabot[bot]"},
+					Branches: map[string]*config.Branch{
+						"dependabot": {
+							Key:    "dependabot",
+							Prefix: "dependabot",
+						},
+					},
+				},
+			},
+			Merge: &config.Merge{
+				Method: "squash",
+				Include: &config.Include{
+					Authors: config.StringArray{"dependabot[bot]"},
+					Branches: map[string]*config.Branch{
+						"dependabot": {
+							Key:             "dependabot",
+							Prefix:          "dependabot",
+							ConflictComment: "@dependabot recreate",
+						},
+					},
+				},
+			},
+		},
+	})
+
+	assert.NoError(t, err)
+	assert.Contains(t, commentBody, "@dependabot recreate")
 }
 
 // test utilities
