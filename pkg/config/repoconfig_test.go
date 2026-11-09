@@ -64,6 +64,25 @@ func TestApproveOnlyRepoConfig_Unmarshal(t *testing.T) {
 	}
 }
 
+func TestConflictCommentConfig_Unmarshal(t *testing.T) {
+	t.Parallel()
+
+	cnt, err := testdata.Data.ReadFile("valid_config_conflict_comment.yaml")
+	assert.NoError(t, err)
+
+	cfg, _, err := Unmarshal(cnt)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "1.0.1", cfg.Version)
+	assert.False(t, cfg.NoMerge())
+	assert.Equal(t, "squash", cfg.Merge.Method)
+
+	branch := cfg.Merge.Include.Branches["dependabot"]
+	assert.NotNil(t, branch)
+	assert.Equal(t, "dependabot", branch.Prefix)
+	assert.Equal(t, "@dependabot recreate", branch.ConflictComment)
+}
+
 func TestLoadingMergeConfig(t *testing.T) {
 	// Loading config file that has _config: merge
 	// Testing if it's overwriting global config properly

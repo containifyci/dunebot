@@ -62,6 +62,22 @@ func (v *Validator) MatchedBranchConfig(include *config.Include, branchName stri
 	return foundBranches
 }
 
+// MergeConflictComment returns the conflict_comment configured on the merge branch
+// matching the given head branch name. It returns the first matching branch's
+// ConflictComment and true when one is configured, or an empty string and false
+// otherwise.
+func (v *Validator) MergeConflictComment(branchName string) (string, bool) {
+	if v.Config.NoMerge() {
+		return "", false
+	}
+	for _, branch := range v.MatchedBranchConfig(v.Config.Merge.GetInclude(), branchName) {
+		if branch != nil && branch.ConflictComment != "" {
+			return branch.ConflictComment, true
+		}
+	}
+	return "", false
+}
+
 func (v *Validator) ValidateApproveCommentsAndChecks(pr github.PullRequestResolver) *validators.ValidationResults {
 	if v.Config.NoApprove() {
 		return &validators.ValidationResults{Success: false, Type: "Approve"}

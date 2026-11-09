@@ -28,6 +28,7 @@ type Branch struct {
 	Labels           StringArray `yaml:"labels,omitempty"`
 	Comments         []*Comment  `yaml:"comments,omitempty"`
 	Strict           bool        `yaml:"strict,omitempty"`
+	ConflictComment  string      `yaml:"conflict_comment,omitempty"`
 }
 
 type Include struct {

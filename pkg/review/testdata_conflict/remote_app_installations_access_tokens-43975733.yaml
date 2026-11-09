@@ -1,0 +1,12 @@
+- url: /app/installations/43975733/access_tokens
+  status: 200
+  body: |
+    {
+      "token": "ghs_*************************",
+      "expires_at": "2020-01-22T19:33:08Z",
+      "permissions": {
+        "administration": "write",
+        "statuses": "write"
+      },
+      "repository_selection": "selected"
+    }

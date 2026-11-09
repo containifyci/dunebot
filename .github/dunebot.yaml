@@ -13,4 +13,5 @@ merge:
     branches:
       dependabot_terraform:
         prefix: "dependabot/go_modules"
+        conflict_comment: "@dependabot recreate"
   method: squash

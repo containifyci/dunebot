@@ -1,0 +1,30 @@
+- url: /repos/test-owner/test-repo/pulls/2
+  status: 200
+  body: |
+    {
+      "id": 2,
+      "number": 2,
+      "title": "Bump github.com/foo/bar from 1.0.0 to 1.1.0",
+      "head": {
+        "sha": "1234567890",
+        "ref": "dependabot/go_modules/github.com/foo/bar-1.1.0"
+      },
+      "base": {
+        "sha": "9876543210",
+        "ref": "main",
+        "repo": {
+          "default_branch": "main"
+        }
+      },
+      "labels": [
+        {
+          "name": "dependencies"
+        }
+      ],
+      "state": "open",
+      "mergeable_state": "dirty",
+      "mergeable": false,
+      "user": {
+        "login": "dependabot[bot]"
+      }
+    }

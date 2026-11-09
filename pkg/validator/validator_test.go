@@ -404,6 +404,100 @@ func TestMatchedBranchConfigSignleMultiple(t *testing.T) {
 	}
 }
 
+func TestMergeConflictComment(t *testing.T) {
+	tests := []struct {
+		name       string
+		config     *config.AppConfig
+		branchName string
+		expected   string
+		expectedOk bool
+	}{
+		{
+			name:       "no merge config",
+			config:     &config.AppConfig{},
+			branchName: "dependabot/go_modules",
+			expected:   "",
+			expectedOk: false,
+		},
+		{
+			name: "merge config without branches",
+			config: &config.AppConfig{
+				Merge: &config.Merge{
+					Include: &config.Include{},
+				},
+			},
+			branchName: "dependabot/go_modules",
+			expected:   "",
+			expectedOk: false,
+		},
+		{
+			name: "matching branch with conflict comment",
+			config: &config.AppConfig{
+				Merge: &config.Merge{
+					Include: &config.Include{
+						Branches: map[string]*config.Branch{
+							"dependabot": {
+								Key:             "dependabot",
+								Prefix:          "dependabot",
+								ConflictComment: "@dependabot recreate",
+							},
+						},
+					},
+				},
+			},
+			branchName: "dependabot/go_modules",
+			expected:   "@dependabot recreate",
+			expectedOk: true,
+		},
+		{
+			name: "matching branch without conflict comment",
+			config: &config.AppConfig{
+				Merge: &config.Merge{
+					Include: &config.Include{
+						Branches: map[string]*config.Branch{
+							"dependabot": {
+								Key:    "dependabot",
+								Prefix: "dependabot",
+							},
+						},
+					},
+				},
+			},
+			branchName: "dependabot/go_modules",
+			expected:   "",
+			expectedOk: false,
+		},
+		{
+			name: "non-matching branch",
+			config: &config.AppConfig{
+				Merge: &config.Merge{
+					Include: &config.Include{
+						Branches: map[string]*config.Branch{
+							"dependabot": {
+								Key:             "dependabot",
+								Prefix:          "dependabot",
+								ConflictComment: "@dependabot recreate",
+							},
+						},
+					},
+				},
+			},
+			branchName: "feature/my-feature",
+			expected:   "",
+			expectedOk: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewValidator(tt.config)
+			comment, ok := v.MergeConflictComment(tt.branchName)
+			assert.Equal(t, tt.expectedOk, ok)
+			assert.Equal(t, tt.expected, comment)
+		})
+	}
+}
+
 func Unmarshal[T any](file string, typ *T) (*T, error) {
 	var t T
 	cnt, err := testdata.Data.ReadFile(file)

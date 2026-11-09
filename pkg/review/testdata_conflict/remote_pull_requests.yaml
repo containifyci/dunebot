@@ -1,0 +1,28 @@
+- url: /repos/test-owner/test-repo/pulls
+  status: 200
+  headers:
+    link: <https://api.github.com/repositories/724073722/pulls?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/724073722/pulls?per_page=1&page=3>; rel="last"
+  body: |
+    [
+      {
+        "id": 1,
+        "number": 1,
+        "title": "Merged PR",
+        "head": {
+          "sha": "abcdef",
+          "ref": "develop"
+        },
+        "base": {
+          "sha": "9876543210",
+          "ref": "main",
+          "repo": {
+            "default_branch": "main"
+          }
+        },
+        "state": "closed",
+        "merged_at": "2020-01-22T19:33:08Z",
+        "user": {
+          "login": "dune"
+        }
+      }
+    ]

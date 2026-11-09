@@ -1,0 +1,20 @@
+version: 1.0.1
+approve:
+  approver: fr12k
+  include:
+    authors: [dune]
+    branches:
+      dependabot:
+        authors: [dune]
+        prefix: "dependabot"
+        labels: [dependencies]
+merge:
+  method: squash
+  include:
+    authors: [dune]
+    branches:
+      dependabot:
+        authors: [dune]
+        prefix: "dependabot"
+        labels: [dependencies]
+        conflict_comment: "@dependabot recreate"
